@@ -1,0 +1,113 @@
+:host {
+  display: block;
+  position: relative;
+  --fupu-offset: 0px;
+  --fupu-item-basis: 100%;
+  --fupu-speed: 400ms;
+  --fupu-easing: cubic-bezier(0, 0, 0.2, 1);
+  --fupu-dir: -1;
+  --fupu-vertical-height: auto;
+}
+
+:host.fupurtl {
+  direction: rtl;
+  --fupu-dir: 1;
+}
+
+:host.banner .fupucarouselPointDefault .fupucarouselPoint {
+  position: absolute;
+  width: 100%;
+  bottom: 20px;
+}
+
+:host.banner .fupucarouselPointDefault .fupucarouselPoint li {
+  background: #ffffff8c;
+}
+
+:host.banner .fupucarouselPointDefault .fupucarouselPoint li.active {
+  background: #fff;
+}
+
+.fupucarousel {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+.fupu-container {
+  overflow: hidden;
+}
+
+.fupu-touch-container {
+  touch-action: pan-y;
+}
+
+.fupucarousel-items {
+  position: relative;
+  display: flex;
+  height: 100%;
+  will-change: transform;
+  transform: translate3d(calc(var(--fupu-dir) * var(--fupu-offset)), 0, 0);
+  transition: transform var(--fupu-speed) var(--fupu-easing);
+}
+
+.fupuvertical .fupu-touch-container {
+  touch-action: pan-x;
+}
+
+.fupuvertical .fupucarousel-items {
+  flex-direction: column;
+  height: var(--fupu-vertical-height);
+  transform: translate3d(0, calc(-1 * var(--fupu-offset)), 0);
+}
+
+:host ::ng-deep .item {
+  flex: 0 0 var(--fupu-item-basis);
+  width: var(--fupu-item-basis);
+  box-sizing: border-box;
+}
+
+.fupuvertical ::ng-deep .item {
+  width: 100%;
+  height: var(--fupu-item-basis);
+  flex-basis: var(--fupu-item-basis);
+}
+
+.fupuclearFix {
+  clear: both;
+}
+
+.fupucarouselPointDefault .fupucarouselPoint {
+  list-style-type: none;
+  text-align: center;
+  padding: 12px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: auto;
+  box-sizing: border-box;
+}
+
+.fupucarouselPointDefault .fupucarouselPoint li {
+  display: inline-block;
+  border-radius: 50%;
+  background: #0000008c;
+  padding: 4px;
+  margin: 0 4px;
+  transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  transition: 0.4s;
+}
+
+.fupucarouselPointDefault .fupucarouselPoint li.active {
+  background: #6b6b6b;
+  transform: scale(1.8);
+}
+
+.fupucarouselPointDefault .fupucarouselPoint li:hover {
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fupucarousel-items {
+    transition: none;
+  }
+}

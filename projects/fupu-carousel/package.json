@@ -1,0 +1,25 @@
+{
+  "name": "fupu-carousel",
+  "version": "20.0.0",
+  "description": "Angular SSR-friendly carousel library compatible with ngu-carousel behavior",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/felipeyukio182/fupu-carousel.git"
+  },
+  "keywords": [
+    "angular",
+    "carousel",
+    "ssr",
+    "fupu-carousel"
+  ],
+  "peerDependencies": {
+    "@angular/common": "^20.0.0",
+    "@angular/core": "^20.0.0",
+    "rxjs": "^7.4.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}
