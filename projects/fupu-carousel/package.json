@@ -1,6 +1,6 @@
 {
   "name": "fupu-carousel",
-  "version": "20.0.0",
+  "version": "21.0.0",
   "description": "Angular SSR-friendly carousel library compatible with ngu-carousel behavior",
   "license": "MIT",
   "repository": {
@@ -14,8 +14,8 @@
     "fupu-carousel"
   ],
   "peerDependencies": {
-    "@angular/common": "^20.0.0",
-    "@angular/core": "^20.0.0",
+    "@angular/common": "^21.0.0",
+    "@angular/core": "^21.0.0",
     "rxjs": "^7.4.0"
   },
   "dependencies": {

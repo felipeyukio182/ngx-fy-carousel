@@ -9,11 +9,11 @@ Angular 20+ SSR carousel library with ngu-carousel compatible behavior.
 
 ## Branches
 
-| Branch | Angular |
-| --- | --- |
-| `angular-20` | 20.x |
-| `angular-21` | 21.x |
-| `angular-22` | 22.x |
+| Branch | Angular | Library version |
+| --- | --- | --- |
+| `angular-20` | 20.x | 20.0.0 |
+| `angular-21` | 21.x | 21.0.0 |
+| `angular-22` | 22.x | 22.0.0 |
 
 ## Scripts
 
