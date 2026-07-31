@@ -70,9 +70,9 @@ See [docs/ngu-carousel-compatibility.md](../../docs/ngu-carousel-compatibility.m
 
 ## Versioning
 
-- `20.x` — Angular 20
-- `21.x` — Angular 21
-- `22.x` — Angular 22
+- `20.x` — Angular 20 (`angular-20`)
+- `21.x` — Angular 21 (`angular-21`)
+- `22.x` — Angular 22 (`angular-22`)
 
 ## License
 
