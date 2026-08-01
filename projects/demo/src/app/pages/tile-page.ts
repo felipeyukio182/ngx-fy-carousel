@@ -20,76 +20,107 @@ import {
     NgxFyCarouselPointDirective,
   ],
   template: `
-    <h1>Tile carousel</h1>
-    <p>Responsive grid with controls, points and incremental load.</p>
+    <section class="demo-page">
+      <header class="demo-intro">
+        <p class="eyebrow">Responsive grid</p>
+        <h1>Tile carousel</h1>
+        <p>Multi-item layout with controls, pagination points, and incremental load as you browse.</p>
+      </header>
 
-    <ngx-fy-carousel
-      #carousel
-      [inputs]="config"
-      [dataSource]="items()"
-      (carouselLoad)="loadMore()"
-    >
-      <ngx-fy-carousel-tile *ngxFyCarouselDef="let item; let i = index">
-        <div class="card">{{ item }}</div>
-      </ngx-fy-carousel-tile>
+      <div class="demo-stage">
+        <ngx-fy-carousel
+          #carousel
+          [inputs]="config"
+          [dataSource]="items()"
+          (carouselLoad)="loadMore()"
+        >
+          <ngx-fy-carousel-tile *ngxFyCarouselDef="let item; let i = index">
+            <div class="card" [attr.data-tone]="i % 4">
+              <span class="card-index">{{ item }}</span>
+              <span class="card-label">Tile</span>
+            </div>
+          </ngx-fy-carousel-tile>
 
-      <button type="button" class="nav left" ngxFyCarouselPrev [style.opacity]="carousel.isFirst() ? 0.4 : 1">
-        ‹
-      </button>
-      <button type="button" class="nav right" ngxFyCarouselNext [style.opacity]="carousel.isLast() ? 0.4 : 1">
-        ›
-      </button>
+          <button
+            type="button"
+            class="demo-nav left"
+            ngxFyCarouselPrev
+            [style.opacity]="carousel.isFirst() ? 0.4 : 1"
+            aria-label="Previous"
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            class="demo-nav right"
+            ngxFyCarouselNext
+            [style.opacity]="carousel.isLast() ? 0.4 : 1"
+            aria-label="Next"
+          >
+            ›
+          </button>
 
-      <ul class="points" ngxFyCarouselPoint>
-        @for (p of carousel.pointNumbers(); track p) {
-          <li [class.active]="p === carousel.activePoint()" (click)="carousel.moveTo(p)"></li>
-        }
-      </ul>
-    </ngx-fy-carousel>
+          <ul class="demo-points" ngxFyCarouselPoint>
+            @for (p of carousel.pointNumbers(); track p) {
+              <li
+                [class.active]="p === carousel.activePoint()"
+                (click)="carousel.moveTo(p)"
+                [attr.aria-label]="'Go to page ' + (p + 1)"
+              ></li>
+            }
+          </ul>
+        </ngx-fy-carousel>
+      </div>
+    </section>
   `,
   styles: `
+    :host ::ng-deep ngx-fy-carousel-tile .tile {
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgb(26 35 48 / 6%), 0 8px 18px rgb(26 35 48 / 6%);
+      transition: box-shadow 180ms var(--ease-out);
+    }
+
+    :host ::ng-deep ngx-fy-carousel-tile:hover .tile {
+      box-shadow: 0 2px 4px rgb(26 35 48 / 8%), 0 12px 24px rgb(26 35 48 / 10%);
+    }
+
     .card {
-      min-height: 180px;
-      background: #dbeafe;
-      border-radius: 12px;
+      min-height: 188px;
       display: grid;
-      place-items: center;
-      font-size: 2rem;
+      place-content: center;
+      gap: 0.3rem;
+      text-align: center;
+      border-radius: inherit;
+    }
+
+    .card[data-tone='0'] {
+      background: #dceee8;
+    }
+    .card[data-tone='1'] {
+      background: #dbe6f0;
+    }
+    .card[data-tone='2'] {
+      background: #efe4d6;
+    }
+    .card[data-tone='3'] {
+      background: #edd9d4;
+    }
+
+    .card-index {
+      font-size: clamp(1.75rem, 3vw, 2.2rem);
       font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      line-height: 1;
     }
-    .nav {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 44px;
-      height: 44px;
-      border: 0;
-      border-radius: 999px;
-      background: #fff;
-      box-shadow: 0 2px 10px rgb(0 0 0 / 20%);
-      z-index: 2;
-      cursor: pointer;
-    }
-    .left { left: 0; }
-    .right { right: 0; }
-    .points {
-      list-style: none;
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px;
-      margin: 0;
-    }
-    .points li {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: #94a3b8;
-      cursor: pointer;
-    }
-    .points li.active {
-      background: #1d4ed8;
-      transform: scale(1.4);
+
+    .card-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
     }
   `,
 })

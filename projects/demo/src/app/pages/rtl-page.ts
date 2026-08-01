@@ -18,39 +18,54 @@ import {
     NgxFyCarouselPrevDirective,
   ],
   template: `
-    <h1>RTL carousel</h1>
-    <ngx-fy-carousel #carousel [inputs]="config" [dataSource]="items()">
-      <ngx-fy-carousel-tile *ngxFyCarouselDef="let item">
-        <div class="card">{{ item }}</div>
-      </ngx-fy-carousel-tile>
-      <button type="button" class="nav left" ngxFyCarouselPrev>‹</button>
-      <button type="button" class="nav right" ngxFyCarouselNext>›</button>
-    </ngx-fy-carousel>
+    <section class="demo-page">
+      <header class="demo-intro">
+        <p class="eyebrow">Right-to-left</p>
+        <h1>RTL carousel</h1>
+        <p>Same tile grid with <code>RTL: true</code> — navigation and swipe follow reading direction.</p>
+      </header>
+
+      <div class="demo-stage" dir="rtl">
+        <ngx-fy-carousel #carousel [inputs]="config" [dataSource]="items()">
+          <ngx-fy-carousel-tile *ngxFyCarouselDef="let item; let i = index">
+            <div class="card" [attr.data-tone]="i % 3">
+              <span>{{ item }}</span>
+            </div>
+          </ngx-fy-carousel-tile>
+          <button type="button" class="demo-nav left" ngxFyCarouselPrev aria-label="Previous">‹</button>
+          <button type="button" class="demo-nav right" ngxFyCarouselNext aria-label="Next">›</button>
+        </ngx-fy-carousel>
+      </div>
+    </section>
   `,
   styles: `
+    :host ::ng-deep ngx-fy-carousel-tile .tile {
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgb(26 35 48 / 6%), 0 8px 18px rgb(26 35 48 / 6%);
+    }
+
     .card {
-      min-height: 160px;
-      background: #fef3c7;
-      border-radius: 12px;
+      min-height: 168px;
       display: grid;
       place-items: center;
-      font-size: 1.5rem;
+    }
+
+    .card span {
+      font-size: 1.9rem;
       font-weight: 700;
+      letter-spacing: -0.015em;
     }
-    .nav {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 44px;
-      height: 44px;
-      border: 0;
-      border-radius: 999px;
-      background: #fff;
-      box-shadow: 0 2px 10px rgb(0 0 0 / 20%);
-      z-index: 2;
+
+    .card[data-tone='0'] {
+      background: #efe4d6;
     }
-    .left { left: 0; }
-    .right { right: 0; }
+    .card[data-tone='1'] {
+      background: #dceee8;
+    }
+    .card[data-tone='2'] {
+      background: #dbe6f0;
+    }
   `,
 })
 export class RtlPage {

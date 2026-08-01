@@ -18,47 +18,103 @@ import {
     NgxFyCarouselPrevDirective,
   ],
   template: `
-    <h1>Nested carousels</h1>
-    <ngx-fy-carousel [inputs]="outerConfig" [dataSource]="groups()">
-      <ngx-fy-carousel-tile *ngxFyCarouselDef="let group">
-        <h3>{{ group.title }}</h3>
-        <ngx-fy-carousel [inputs]="innerConfig" [dataSource]="group.items">
-          <ngx-fy-carousel-tile *ngxFyCarouselDef="let item">
-            <div class="mini">{{ item }}</div>
+    <section class="demo-page">
+      <header class="demo-intro">
+        <p class="eyebrow">Composition</p>
+        <h1>Nested carousels</h1>
+        <p>An outer carousel of groups, each with its own inner tile carousel and independent controls.</p>
+      </header>
+
+      <div class="demo-stage">
+        <ngx-fy-carousel [inputs]="outerConfig" [dataSource]="groups()">
+          <ngx-fy-carousel-tile *ngxFyCarouselDef="let group">
+            <article class="group">
+              <header class="group-head">
+                <h3>{{ group.title }}</h3>
+                <span>{{ group.items.length }} tiles</span>
+              </header>
+              <ngx-fy-carousel [inputs]="innerConfig" [dataSource]="group.items">
+                <ngx-fy-carousel-tile *ngxFyCarouselDef="let item; let i = index">
+                  <div class="mini" [attr.data-tone]="i % 3">{{ item }}</div>
+                </ngx-fy-carousel-tile>
+                <button type="button" class="demo-nav left inner" ngxFyCarouselPrev aria-label="Previous inner">
+                  ‹
+                </button>
+                <button type="button" class="demo-nav right inner" ngxFyCarouselNext aria-label="Next inner">
+                  ›
+                </button>
+              </ngx-fy-carousel>
+            </article>
           </ngx-fy-carousel-tile>
-          <button type="button" class="nav left" ngxFyCarouselPrev>‹</button>
-          <button type="button" class="nav right" ngxFyCarouselNext>›</button>
+          <button type="button" class="demo-nav left outer" ngxFyCarouselPrev aria-label="Previous group">‹</button>
+          <button type="button" class="demo-nav right outer" ngxFyCarouselNext aria-label="Next group">›</button>
         </ngx-fy-carousel>
-      </ngx-fy-carousel-tile>
-      <button type="button" class="nav left outer" ngxFyCarouselPrev>‹</button>
-      <button type="button" class="nav right outer" ngxFyCarouselNext>›</button>
-    </ngx-fy-carousel>
+      </div>
+    </section>
   `,
   styles: `
-    h3 { margin: 0 0 0.5rem; }
-    .mini {
-      min-height: 120px;
-      background: #fce7f3;
-      border-radius: 10px;
-      display: grid;
-      place-items: center;
+    :host ::ng-deep ngx-fy-carousel-tile .tile {
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgb(26 35 48 / 6%), 0 8px 18px rgb(26 35 48 / 6%);
+    }
+
+    .group {
+      padding: 0.25rem 0.1rem 0.4rem;
+    }
+
+    .group-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin: 0 0 0.75rem;
+      padding: 0 0.3rem;
+    }
+
+    .group-head h3 {
+      margin: 0;
+      font-size: 1.1rem;
       font-weight: 700;
     }
-    .nav {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 36px;
-      height: 36px;
-      border: 0;
-      border-radius: 999px;
-      background: #fff;
-      box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
-      z-index: 2;
+
+    .group-head span {
+      color: var(--ink-soft);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
     }
-    .left { left: 0; }
-    .right { right: 0; }
-    .outer { top: 24px; transform: none; }
+
+    .mini {
+      min-height: 124px;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+    }
+
+    .mini[data-tone='0'] {
+      background: #edd9d4;
+    }
+    .mini[data-tone='1'] {
+      background: #dceee8;
+    }
+    .mini[data-tone='2'] {
+      background: #dbe6f0;
+    }
+
+    .demo-nav.inner {
+      width: 2.1rem;
+      height: 2.1rem;
+      font-size: 1.05rem;
+    }
+
+    .demo-nav.outer {
+      top: 1rem;
+      transform: none;
+    }
   `,
 })
 export class NestedPage {

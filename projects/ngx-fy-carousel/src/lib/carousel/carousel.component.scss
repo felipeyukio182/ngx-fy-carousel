@@ -48,7 +48,6 @@
   height: 100%;
   will-change: transform;
   transform: translate3d(calc(var(--ngx-fy-dir) * var(--ngx-fy-offset)), 0, 0);
-  transition: transform var(--ngx-fy-speed) var(--ngx-fy-easing);
 }
 
 .ngxfyvertical .ngx-fy-touch-container {
@@ -61,16 +60,13 @@
   transform: translate3d(0, calc(-1 * var(--ngx-fy-offset)), 0);
 }
 
+/* Item flex/width/height are injected as breakpoint @media rules (ngu-carousel parity). */
 :host ::ng-deep .item {
-  flex: 0 0 var(--ngx-fy-item-basis);
-  width: var(--ngx-fy-item-basis);
   box-sizing: border-box;
 }
 
 .ngxfyvertical ::ng-deep .item {
   width: 100%;
-  height: var(--ngx-fy-item-basis);
-  flex-basis: var(--ngx-fy-item-basis);
 }
 
 .ngxfyclearFix {
@@ -106,8 +102,3 @@
   cursor: pointer;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .ngxfycarousel-items {
-    transition: none;
-  }
-}
