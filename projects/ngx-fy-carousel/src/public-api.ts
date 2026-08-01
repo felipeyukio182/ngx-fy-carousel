@@ -40,6 +40,9 @@ export { NgxFyCarousel } from './lib/carousel/carousel.component';
 export { NgxFyCarouselItemComponent } from './lib/components/item.component';
 export { NgxFyCarouselTileComponent } from './lib/components/tile.component';
 
+export { NGX_FY_CAROUSEL_NAV } from './lib/tokens';
+export type { NgxFyCarouselNav } from './lib/tokens';
+
 export {
   NgxFyCarouselDefDirective,
   NgxFyCarouselItemDirective,
