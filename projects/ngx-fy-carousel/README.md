@@ -1,4 +1,4 @@
-# fupu-carousel
+# ngx-fy-carousel
 
 Angular SSR-friendly carousel library with ngu-carousel compatible behavior, modernized for Angular 20+.
 
@@ -15,7 +15,7 @@ Angular SSR-friendly carousel library with ngu-carousel compatible behavior, mod
 ## Install
 
 ```bash
-npm i fupu-carousel
+npm i ngx-fy-carousel
 ```
 
 Peer dependencies: `@angular/core`, `@angular/common`, `rxjs`.
@@ -24,33 +24,33 @@ Peer dependencies: `@angular/core`, `@angular/common`, `rxjs`.
 
 ```ts
 import {
-  FupuCarousel,
-  FupuCarouselConfig,
-  FupuCarouselDefDirective,
-  FupuCarouselTileComponent,
-  FupuCarouselNextDirective,
-  FupuCarouselPrevDirective,
-} from 'fupu-carousel';
+  NgxFyCarousel,
+  NgxFyCarouselConfig,
+  NgxFyCarouselDefDirective,
+  NgxFyCarouselTileComponent,
+  NgxFyCarouselNextDirective,
+  NgxFyCarouselPrevDirective,
+} from 'ngx-fy-carousel';
 
 @Component({
   imports: [
-    FupuCarousel,
-    FupuCarouselTileComponent,
-    FupuCarouselDefDirective,
-    FupuCarouselNextDirective,
-    FupuCarouselPrevDirective,
+    NgxFyCarousel,
+    NgxFyCarouselTileComponent,
+    NgxFyCarouselDefDirective,
+    NgxFyCarouselNextDirective,
+    NgxFyCarouselPrevDirective,
   ],
   template: `
-    <fupu-carousel [inputs]="config" [dataSource]="items">
-      <fupu-carousel-tile *fupuCarouselDef="let item">{{ item }}</fupu-carousel-tile>
-      <button fupuCarouselPrev>prev</button>
-      <button fupuCarouselNext>next</button>
-    </fupu-carousel>
+    <ngx-fy-carousel [inputs]="config" [dataSource]="items">
+      <ngx-fy-carousel-tile *ngxFyCarouselDef="let item">{{ item }}</ngx-fy-carousel-tile>
+      <button ngxFyCarouselPrev>prev</button>
+      <button ngxFyCarouselNext>next</button>
+    </ngx-fy-carousel>
   `,
 })
 export class Demo {
   items = [1, 2, 3, 4, 5];
-  config: FupuCarouselConfig = {
+  config: NgxFyCarouselConfig = {
     grid: { xs: 1, sm: 2, md: 3, lg: 4, xl: 4, all: 0 },
     slide: 1,
     speed: 400,

@@ -1,31 +1,31 @@
 import { Component, signal } from '@angular/core';
 import {
-  FupuCarousel,
-  FupuCarouselConfig,
-  FupuCarouselDefDirective,
-  FupuCarouselItemComponent,
-  FupuCarouselNextDirective,
-  FupuCarouselPrevDirective,
-} from 'fupu-carousel';
+  NgxFyCarousel,
+  NgxFyCarouselConfig,
+  NgxFyCarouselDefDirective,
+  NgxFyCarouselItemComponent,
+  NgxFyCarouselNextDirective,
+  NgxFyCarouselPrevDirective,
+} from 'ngx-fy-carousel';
 
 @Component({
   selector: 'app-vertical-page',
   imports: [
-    FupuCarousel,
-    FupuCarouselItemComponent,
-    FupuCarouselDefDirective,
-    FupuCarouselNextDirective,
-    FupuCarouselPrevDirective,
+    NgxFyCarousel,
+    NgxFyCarouselItemComponent,
+    NgxFyCarouselDefDirective,
+    NgxFyCarouselNextDirective,
+    NgxFyCarouselPrevDirective,
   ],
   template: `
     <h1>Vertical carousel</h1>
-    <fupu-carousel [inputs]="config" [dataSource]="items()">
-      <fupu-carousel-item *fupuCarouselDef="let item">
+    <ngx-fy-carousel [inputs]="config" [dataSource]="items()">
+      <ngx-fy-carousel-item *ngxFyCarouselDef="let item">
         <div class="row">{{ item }}</div>
-      </fupu-carousel-item>
-      <button type="button" class="nav top" fupuCarouselPrev>▲</button>
-      <button type="button" class="nav bottom" fupuCarouselNext>▼</button>
-    </fupu-carousel>
+      </ngx-fy-carousel-item>
+      <button type="button" class="nav top" ngxFyCarouselPrev>▲</button>
+      <button type="button" class="nav bottom" ngxFyCarouselNext>▼</button>
+    </ngx-fy-carousel>
   `,
   styles: `
     .row {
@@ -54,7 +54,7 @@ import {
 })
 export class VerticalPage {
   items = signal(['One', 'Two', 'Three', 'Four', 'Five', 'Six']);
-  config: FupuCarouselConfig = {
+  config: NgxFyCarouselConfig = {
     grid: { xs: 1, sm: 1, md: 1, lg: 1, xl: 1, all: 0 },
     slide: 1,
     speed: 400,

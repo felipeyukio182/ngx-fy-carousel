@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Breakpoints, FupuCarouselConfig } from './types';
+import { Breakpoints, NgxFyCarouselConfig } from './types';
 import { normalizeConfig, resolveDeviceType, resolveItemsPerView } from './normalize';
 import {
   clampSlideIndex,
@@ -33,7 +33,7 @@ describe('normalizeConfig', () => {
     expect(() =>
       normalizeConfig({
         grid: { xs: 0, sm: 2, md: 3, lg: 4, all: 0 },
-      } as FupuCarouselConfig),
+      } as NgxFyCarouselConfig),
     ).toThrow(/grid.xs/);
   });
 
