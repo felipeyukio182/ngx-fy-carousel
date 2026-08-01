@@ -76,4 +76,4 @@ See [docs/ngu-carousel-compatibility.md](../../docs/ngu-carousel-compatibility.m
 
 ## License
 
-MIT. See [LICENSE](../../LICENSE) and [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md).
+MIT. See [LICENSE](./LICENSE) and [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md).
