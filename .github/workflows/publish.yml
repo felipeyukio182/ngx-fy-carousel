@@ -1,0 +1,47 @@
+name: Publish npm
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build library
+        run: npm run build:lib
+
+      - name: Verify release tag matches package version
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          PKG_VERSION="$(node -p "require('./projects/ngx-fy-carousel/package.json').version")"
+          echo "Tag version: $TAG"
+          echo "Package version: $PKG_VERSION"
+          if [ "$TAG" != "$PKG_VERSION" ]; then
+            echo "::error::Release tag (v$TAG) must match projects/ngx-fy-carousel/package.json version ($PKG_VERSION)"
+            exit 1
+          fi
+
+      - name: Publish to npm
+        run: npm publish ./dist/ngx-fy-carousel --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

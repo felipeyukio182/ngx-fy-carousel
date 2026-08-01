@@ -23,12 +23,15 @@ npm run build:lib         # build library
 npm run build             # build lib + demo
 npm test                  # unit tests (Vitest)
 npm run serve:ssr:demo    # run SSR server after build
+npm run publish:lib:dry   # dry-run npm publish
+npm run publish:lib       # publish built lib to npm (manual)
 ```
 
 ## Docs
 
 - [Library README](projects/ngx-fy-carousel/README.md)
 - [Compatibility guide](docs/ngu-carousel-compatibility.md)
+- [Publish guide](docs/publish.md)
 - [Third-party notices](THIRD_PARTY_NOTICES.md)
 
 ## License

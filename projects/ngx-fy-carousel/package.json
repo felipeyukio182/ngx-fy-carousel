@@ -7,12 +7,19 @@
     "type": "git",
     "url": "git+https://github.com/felipeyukio182/ngx-fy-carousel.git"
   },
+  "bugs": {
+    "url": "https://github.com/felipeyukio182/ngx-fy-carousel/issues"
+  },
+  "homepage": "https://github.com/felipeyukio182/ngx-fy-carousel#readme",
   "keywords": [
     "angular",
     "carousel",
     "ssr",
     "ngx-fy-carousel"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "peerDependencies": {
     "@angular/common": "^21.0.0",
     "@angular/core": "^21.0.0",
