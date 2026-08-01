@@ -5,8 +5,8 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "fupu-carousel": [
-        "./projects/fupu-carousel/src/public-api.ts"
+      "ngx-fy-carousel": [
+        "./projects/ngx-fy-carousel/src/public-api.ts"
       ]
     },
     "noImplicitOverride": true,
@@ -30,10 +30,10 @@
   "files": [],
   "references": [
     {
-      "path": "./projects/fupu-carousel/tsconfig.lib.json"
+      "path": "./projects/ngx-fy-carousel/tsconfig.lib.json"
     },
     {
-      "path": "./projects/fupu-carousel/tsconfig.spec.json"
+      "path": "./projects/ngx-fy-carousel/tsconfig.spec.json"
     },
     {
       "path": "./projects/demo/tsconfig.app.json"

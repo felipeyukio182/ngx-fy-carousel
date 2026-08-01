@@ -1,20 +1,20 @@
 # Compatibility with @ngu/carousel
 
-`fupu-carousel` aims for behavioral compatibility with `@ngu/carousel@20`, using a `fupu` naming prefix.
+`ngx-fy-carousel` aims for behavioral compatibility with `@ngu/carousel@20`, using a `ngx-fy` naming prefix.
 
 ## Mapping
 
-| ngu-carousel | fupu-carousel |
+| ngu-carousel | ngx-fy-carousel |
 | --- | --- |
-| `ngu-carousel` | `fupu-carousel` |
-| `ngu-item` | `fupu-carousel-item` |
-| `ngu-tile` | `fupu-carousel-tile` |
-| `*nguCarouselDef` | `*fupuCarouselDef` |
-| `[NguCarouselNext]` | `[fupuCarouselNext]` |
-| `[NguCarouselPrev]` | `[fupuCarouselPrev]` |
-| `[NguCarouselPoint]` | `[fupuCarouselPoint]` |
-| `NguCarouselConfig` | `FupuCarouselConfig` |
-| `NguCarouselStore` | `FupuCarouselStore` |
+| `ngu-carousel` | `ngx-fy-carousel` |
+| `ngu-item` | `ngx-fy-carousel-item` |
+| `ngu-tile` | `ngx-fy-carousel-tile` |
+| `*nguCarouselDef` | `*ngxFyCarouselDef` |
+| `[NguCarouselNext]` | `[ngxFyCarouselNext]` |
+| `[NguCarouselPrev]` | `[ngxFyCarouselPrev]` |
+| `[NguCarouselPoint]` | `[ngxFyCarouselPoint]` |
+| `NguCarouselConfig` | `NgxFyCarouselConfig` |
+| `NguCarouselStore` | `NgxFyCarouselStore` |
 
 ## Preserved contracts
 
@@ -45,7 +45,7 @@
 import { NguCarousel, NguCarouselConfig } from '@ngu/carousel';
 
 // after
-import { FupuCarousel, FupuCarouselConfig } from 'fupu-carousel';
+import { NgxFyCarousel, NgxFyCarouselConfig } from 'ngx-fy-carousel';
 ```
 
 ```html
@@ -57,9 +57,9 @@ import { FupuCarousel, FupuCarouselConfig } from 'fupu-carousel';
 </ngu-carousel>
 
 <!-- after -->
-<fupu-carousel [inputs]="cfg" [dataSource]="items">
-  <fupu-carousel-tile *fupuCarouselDef="let item">...</fupu-carousel-tile>
-  <button fupuCarouselPrev></button>
-  <button fupuCarouselNext></button>
-</fupu-carousel>
+<ngx-fy-carousel [inputs]="cfg" [dataSource]="items">
+  <ngx-fy-carousel-tile *ngxFyCarouselDef="let item">...</ngx-fy-carousel-tile>
+  <button ngxFyCarouselPrev></button>
+  <button ngxFyCarouselNext></button>
+</ngx-fy-carousel>
 ```

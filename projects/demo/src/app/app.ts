@@ -6,7 +6,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   imports: [RouterOutlet, RouterLink],
   template: `
     <header class="topbar">
-      <a routerLink="/" class="brand">fupu-carousel</a>
+      <a routerLink="/" class="brand">ngx-fy-carousel</a>
       <nav>
         <a routerLink="/tile">Tile</a>
         <a routerLink="/banner">Banner</a>
@@ -53,5 +53,5 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   `,
 })
 export class App {
-  title = signal('fupu-carousel demo');
+  title = signal('ngx-fy-carousel demo');
 }

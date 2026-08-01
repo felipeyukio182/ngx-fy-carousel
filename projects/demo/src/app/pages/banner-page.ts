@@ -1,42 +1,42 @@
 import { Component, signal } from '@angular/core';
 import {
-  FupuCarousel,
-  FupuCarouselConfig,
-  FupuCarouselDefDirective,
-  FupuCarouselItemComponent,
-  FupuCarouselNextDirective,
-  FupuCarouselPointDirective,
-  FupuCarouselPrevDirective,
-} from 'fupu-carousel';
+  NgxFyCarousel,
+  NgxFyCarouselConfig,
+  NgxFyCarouselDefDirective,
+  NgxFyCarouselItemComponent,
+  NgxFyCarouselNextDirective,
+  NgxFyCarouselPointDirective,
+  NgxFyCarouselPrevDirective,
+} from 'ngx-fy-carousel';
 
 @Component({
   selector: 'app-banner-page',
   imports: [
-    FupuCarousel,
-    FupuCarouselItemComponent,
-    FupuCarouselDefDirective,
-    FupuCarouselNextDirective,
-    FupuCarouselPrevDirective,
-    FupuCarouselPointDirective,
+    NgxFyCarousel,
+    NgxFyCarouselItemComponent,
+    NgxFyCarouselDefDirective,
+    NgxFyCarouselNextDirective,
+    NgxFyCarouselPrevDirective,
+    NgxFyCarouselPointDirective,
   ],
   template: `
     <h1>Banner carousel</h1>
     <p>Autoplay + loop banner mode.</p>
 
-    <fupu-carousel #carousel [inputs]="config" [dataSource]="items()">
-      <fupu-carousel-item *fupuCarouselDef="let item">
+    <ngx-fy-carousel #carousel [inputs]="config" [dataSource]="items()">
+      <ngx-fy-carousel-item *ngxFyCarouselDef="let item">
         <div class="banner" [style.background]="item.color">
           <h2>{{ item.title }}</h2>
         </div>
-      </fupu-carousel-item>
-      <button type="button" class="nav left" fupuCarouselPrev>‹</button>
-      <button type="button" class="nav right" fupuCarouselNext>›</button>
-      <ul class="points" fupuCarouselPoint>
+      </ngx-fy-carousel-item>
+      <button type="button" class="nav left" ngxFyCarouselPrev>‹</button>
+      <button type="button" class="nav right" ngxFyCarouselNext>›</button>
+      <ul class="points" ngxFyCarouselPoint>
         @for (p of carousel.pointNumbers(); track p) {
           <li [class.active]="p === carousel.activePoint()" (click)="carousel.moveTo(p)"></li>
         }
       </ul>
-    </fupu-carousel>
+    </ngx-fy-carousel>
   `,
   styles: `
     .banner {
@@ -87,7 +87,7 @@ export class BannerPage {
     { title: 'Slide 4', color: '#059669' },
   ]);
 
-  config: FupuCarouselConfig = {
+  config: NgxFyCarouselConfig = {
     grid: { xs: 1, sm: 1, md: 1, lg: 1, xl: 1, all: 0 },
     slide: 1,
     speed: 450,

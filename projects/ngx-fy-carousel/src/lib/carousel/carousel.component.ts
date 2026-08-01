@@ -28,10 +28,10 @@ import { EMPTY, Subject, fromEvent, interval, merge, timer } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 
 import {
-  FupuCarouselDefDirective,
-  FupuCarouselNextDirective,
-  FupuCarouselOutlet,
-  FupuCarouselPrevDirective,
+  NgxFyCarouselDefDirective,
+  NgxFyCarouselNextDirective,
+  NgxFyCarouselOutlet,
+  NgxFyCarouselPrevDirective,
 } from '../directives/carousel.directives';
 import {
   NormalizedCarouselConfig,
@@ -47,10 +47,10 @@ import {
   shouldEmitCarouselLoad,
   slideToActivePoint,
 } from '../models/pagination';
-import { FupuCarouselStore } from '../models/store';
+import { NgxFyCarouselStore } from '../models/store';
 import {
-  FupuCarouselConfig,
-  FupuCarouselOutletContext,
+  NgxFyCarouselConfig,
+  NgxFyCarouselOutletContext,
   createOutletContext,
 } from '../models/types';
 import { IS_BROWSER } from '../tokens';
@@ -58,24 +58,24 @@ import { observeIntersection, observeResize, observeVisibility } from './observe
 import { attachPointerGestures } from './pointer-gestures';
 
 type DirectionSymbol = '' | '-';
-type FupuCarouselDataSource<T, U> = (U & NgIterable<T>) | null | undefined;
+type NgxFyCarouselDataSource<T, U> = (U & NgIterable<T>) | null | undefined;
 
 declare const ngDevMode: boolean;
 const NG_DEV_MODE = typeof ngDevMode === 'undefined' || ngDevMode;
 
 @Component({
-  selector: 'fupu-carousel',
+  selector: 'ngx-fy-carousel',
   templateUrl: './carousel.component.html',
   styleUrl: './carousel.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FupuCarouselOutlet],
+  imports: [NgxFyCarouselOutlet],
   host: {
     '[class.banner]': 'normalized()?.custom === "banner"',
-    '[class.fupurtl]': 'RTL && !vertical.enabled',
-    '[class.fupucarouselPointDefault]': 'normalized()?.pointVisible',
+    '[class.ngxfyrtl]': 'RTL && !vertical.enabled',
+    '[class.ngxfycarouselPointDefault]': 'normalized()?.pointVisible',
   },
 })
-export class FupuCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends FupuCarouselStore {
+export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends NgxFyCarouselStore {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly renderer = inject(Renderer2);
   private readonly differs = inject(IterableDiffers);
@@ -86,20 +86,20 @@ export class FupuCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends Fu
   readonly activePoint = signal(0);
   readonly pointNumbers = signal<number[]>([]);
 
-  readonly inputs = input.required<FupuCarouselConfig>();
+  readonly inputs = input.required<NgxFyCarouselConfig>();
   readonly carouselLoad = output<number>();
   readonly onMove = output<this>();
 
-  private readonly defDirectives = contentChildren(FupuCarouselDefDirective);
-  private readonly nodeOutlet = viewChild(FupuCarouselOutlet);
-  readonly nextButton = contentChild(FupuCarouselNextDirective, { read: ElementRef });
-  readonly prevButton = contentChild(FupuCarouselPrevDirective, { read: ElementRef });
-  readonly carouselMain = viewChild.required('fupucarousel', { read: ElementRef });
-  readonly itemsContainer = viewChild.required('fupuItemsContainer', { read: ElementRef });
+  private readonly defDirectives = contentChildren(NgxFyCarouselDefDirective);
+  private readonly nodeOutlet = viewChild(NgxFyCarouselOutlet);
+  readonly nextButton = contentChild(NgxFyCarouselNextDirective, { read: ElementRef });
+  readonly prevButton = contentChild(NgxFyCarouselPrevDirective, { read: ElementRef });
+  readonly carouselMain = viewChild.required('ngxfycarousel', { read: ElementRef });
+  readonly itemsContainer = viewChild.required('ngxFyItemsContainer', { read: ElementRef });
   readonly touchContainer = viewChild.required('touchContainer', { read: ElementRef });
 
   readonly dataSource = input.required({
-    transform: (v: FupuCarouselDataSource<T, U>) => v || ([] as never),
+    transform: (v: NgxFyCarouselDataSource<T, U>) => v || ([] as never),
   });
 
   readonly trackBy = input<TrackByFunction<T>>();
@@ -280,13 +280,13 @@ export class FupuCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends Fu
     this.directionSymbol = this.RTL ? '' : '-';
     this.speed = config.speed;
 
-    this.host.nativeElement.style.setProperty('--fupu-easing', config.easing);
-    this.host.nativeElement.style.setProperty('--fupu-speed', `${config.speed}ms`);
-    this.host.nativeElement.style.setProperty('--fupu-dir', this.RTL ? '1' : '-1');
+    this.host.nativeElement.style.setProperty('--ngx-fy-easing', config.easing);
+    this.host.nativeElement.style.setProperty('--ngx-fy-speed', `${config.speed}ms`);
+    this.host.nativeElement.style.setProperty('--ngx-fy-dir', this.RTL ? '1' : '-1');
 
     if (config.vertical.enabled) {
       this.host.nativeElement.style.setProperty(
-        '--fupu-vertical-height',
+        '--ngx-fy-vertical-height',
         `${config.vertical.height}px`,
       );
       if (this.initialized) {
@@ -472,7 +472,7 @@ export class FupuCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends Fu
         return;
       }
       const view = viewContainer.get(record.currentIndex) as EmbeddedViewRef<
-        FupuCarouselOutletContext<T>
+        NgxFyCarouselOutletContext<T>
       > | null;
       if (view) {
         view.context.$implicit = record.item;
@@ -492,7 +492,7 @@ export class FupuCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends Fu
     }
     const viewContainer = outlet.viewContainer;
     for (let i = 0, count = viewContainer.length; i < count; i++) {
-      const viewRef = viewContainer.get(i) as EmbeddedViewRef<FupuCarouselOutletContext<T>> | null;
+      const viewRef = viewContainer.get(i) as EmbeddedViewRef<NgxFyCarouselOutletContext<T>> | null;
       if (!viewRef) {
         continue;
       }
@@ -506,12 +506,12 @@ export class FupuCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends Fu
     }
   }
 
-  private getNodeDef(data: T, index: number): FupuCarouselDefDirective<T> | undefined {
+  private getNodeDef(data: T, index: number): NgxFyCarouselDefDirective<T> | undefined {
     const defs = this.defDirectives();
     if (defs.length === 1) {
-      return defs[0] as FupuCarouselDefDirective<T>;
+      return defs[0] as NgxFyCarouselDefDirective<T>;
     }
-    return defs.find(def => !!def.when?.(index, data)) as FupuCarouselDefDirective<T> | undefined;
+    return defs.find(def => !!def.when?.(index, data)) as NgxFyCarouselDefDirective<T> | undefined;
   }
 
   private recalculateLayout(): void {
@@ -544,16 +544,16 @@ export class FupuCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends Fu
   private applyItemBasis(config: NormalizedCarouselConfig): void {
     if (config.vertical.enabled) {
       const basis = `${config.vertical.height / this.items}px`;
-      this.host.nativeElement.style.setProperty('--fupu-item-basis', basis);
+      this.host.nativeElement.style.setProperty('--ngx-fy-item-basis', basis);
       return;
     }
     if (config.layoutType === 'fixed') {
-      this.host.nativeElement.style.setProperty('--fupu-item-basis', `${config.grid.all}px`);
+      this.host.nativeElement.style.setProperty('--ngx-fy-item-basis', `${config.grid.all}px`);
       return;
     }
     const mobileFactor = config.type === 'mobile' ? 95 : 100;
     this.host.nativeElement.style.setProperty(
-      '--fupu-item-basis',
+      '--ngx-fy-item-basis',
       `${mobileFactor / this.items}%`,
     );
   }
@@ -687,7 +687,7 @@ export class FupuCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends Fu
       offset = `${value}px`;
     }
 
-    this.host.nativeElement.style.setProperty('--fupu-offset', offset);
+    this.host.nativeElement.style.setProperty('--ngx-fy-offset', offset);
   }
 
   private currentOffsetValue(): number {
@@ -729,7 +729,7 @@ export class FupuCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends Fu
     }
 
     const unit = this.type === 'responsive' ? '%' : 'px';
-    this.host.nativeElement.style.setProperty('--fupu-offset', `${this.touchTransform}${unit}`);
+    this.host.nativeElement.style.setProperty('--ngx-fy-offset', `${this.touchTransform}${unit}`);
   }
 
   private maxTouchOffset(): number {
@@ -765,7 +765,7 @@ export class FupuCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends Fu
 
     if (direction === 1) {
       for (let i = start - 1; i < end; i++) {
-        const viewRef = viewContainer.get(i) as EmbeddedViewRef<FupuCarouselOutletContext<T>> | null;
+        const viewRef = viewContainer.get(i) as EmbeddedViewRef<NgxFyCarouselOutletContext<T>> | null;
         if (!viewRef) {
           continue;
         }
@@ -775,7 +775,7 @@ export class FupuCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends Fu
       }
     } else {
       for (let i = end - 1; i >= start - 1; i--) {
-        const viewRef = viewContainer.get(i) as EmbeddedViewRef<FupuCarouselOutletContext<T>> | null;
+        const viewRef = viewContainer.get(i) as EmbeddedViewRef<NgxFyCarouselOutletContext<T>> | null;
         if (!viewRef) {
           continue;
         }
@@ -797,7 +797,7 @@ export class FupuCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends Fu
     }
     const viewContainer = outlet.viewContainer;
     indexes.forEach(i => {
-      const viewRef = viewContainer.get(i) as EmbeddedViewRef<FupuCarouselOutletContext<T>> | null;
+      const viewRef = viewContainer.get(i) as EmbeddedViewRef<NgxFyCarouselOutletContext<T>> | null;
       if (viewRef) {
         viewRef.context.animate = { value: false, params: { distance: 0 } };
       }
@@ -835,8 +835,8 @@ export class FupuCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends Fu
     for (let i = 0; i < 6; i++) {
       text += possible.charAt(Math.floor(Math.random() * possible.length));
     }
-    return `fupucarousel${text}`;
+    return `ngxfycarousel${text}`;
   }
 
-  static ngAcceptInputType_dataSource: FupuCarouselDataSource<any, any>;
+  static ngAcceptInputType_dataSource: NgxFyCarouselDataSource<any, any>;
 }
