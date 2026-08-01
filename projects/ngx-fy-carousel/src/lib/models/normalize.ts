@@ -3,7 +3,7 @@ import {
   CarouselInterval,
   CarouselLayoutType,
   DeviceType,
-  FupuCarouselConfig,
+  NgxFyCarouselConfig,
   Transform,
   TransformInterface,
   Vertical,
@@ -38,7 +38,7 @@ function toPositiveInt(value: unknown, fallback: number): number {
   return Math.floor(n);
 }
 
-function normalizeInterval(interval: FupuCarouselConfig['interval']): CarouselInterval | null {
+function normalizeInterval(interval: NgxFyCarouselConfig['interval']): CarouselInterval | null {
   if (interval == null) {
     return null;
   }
@@ -57,9 +57,9 @@ function normalizeInterval(interval: FupuCarouselConfig['interval']): CarouselIn
   return null;
 }
 
-export function normalizeConfig(raw: FupuCarouselConfig): NormalizedCarouselConfig {
+export function normalizeConfig(raw: NgxFyCarouselConfig): NormalizedCarouselConfig {
   if (!raw?.grid) {
-    throw new Error('FupuCarouselConfig.grid is required.');
+    throw new Error('NgxFyCarouselConfig.grid is required.');
   }
 
   const breakpoints = {
@@ -83,11 +83,11 @@ export function normalizeConfig(raw: FupuCarouselConfig): NormalizedCarouselConf
   if (layoutType === 'responsive') {
     for (const key of ['xs', 'sm', 'md', 'lg', 'xl'] as const) {
       if (grid[key] <= 0) {
-        throw new Error(`FupuCarouselConfig.grid.${key} must be > 0 for responsive layout.`);
+        throw new Error(`NgxFyCarouselConfig.grid.${key} must be > 0 for responsive layout.`);
       }
     }
   } else if (grid.all <= 0) {
-    throw new Error('FupuCarouselConfig.grid.all must be > 0 for fixed layout.');
+    throw new Error('NgxFyCarouselConfig.grid.all must be > 0 for fixed layout.');
   }
 
   const vertical = new Vertical();

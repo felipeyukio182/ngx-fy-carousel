@@ -2,7 +2,7 @@ import { signal, WritableSignal } from '@angular/core';
 import {
   CarouselInterval,
   DeviceType,
-  FupuButton,
+  NgxFyButton,
   ItemsControl,
   TouchState,
   Transform,
@@ -13,12 +13,12 @@ import {
  * Runtime carousel state. Public API keeps the same surface as ngu-carousel's store,
  * with signal-based isFirst/isLast.
  */
-export class FupuCarouselStore {
+export class NgxFyCarouselStore {
   touch: TouchState = new TouchState();
   vertical: Vertical = new Vertical();
   interval?: CarouselInterval;
   transform: Transform = new Transform();
-  button?: FupuButton;
+  button?: NgxFyButton;
   visibleItems?: ItemsControl;
   deviceType?: DeviceType;
   type = 'fixed';

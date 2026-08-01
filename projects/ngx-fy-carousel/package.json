@@ -1,17 +1,17 @@
 {
-  "name": "fupu-carousel",
+  "name": "ngx-fy-carousel",
   "version": "21.0.0",
   "description": "Angular SSR-friendly carousel library compatible with ngu-carousel behavior",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/felipeyukio182/fupu-carousel.git"
+    "url": "git+https://github.com/felipeyukio182/ngx-fy-carousel.git"
   },
   "keywords": [
     "angular",
     "carousel",
     "ssr",
-    "fupu-carousel"
+    "ngx-fy-carousel"
   ],
   "peerDependencies": {
     "@angular/common": "^21.0.0",

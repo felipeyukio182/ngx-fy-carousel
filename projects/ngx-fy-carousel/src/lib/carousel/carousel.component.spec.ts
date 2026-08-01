@@ -3,52 +3,52 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { FupuCarousel } from '../carousel/carousel.component';
-import { FupuCarouselTileComponent } from '../components/tile.component';
+import { NgxFyCarousel } from '../carousel/carousel.component';
+import { NgxFyCarouselTileComponent } from '../components/tile.component';
 import {
-  FupuCarouselDefDirective,
-  FupuCarouselNextDirective,
-  FupuCarouselPrevDirective,
-  FupuCarouselPointDirective,
+  NgxFyCarouselDefDirective,
+  NgxFyCarouselNextDirective,
+  NgxFyCarouselPrevDirective,
+  NgxFyCarouselPointDirective,
 } from '../directives/carousel.directives';
-import { FupuCarouselConfig } from '../models/types';
+import { NgxFyCarouselConfig } from '../models/types';
 
 @Component({
   standalone: true,
   imports: [
-    FupuCarousel,
-    FupuCarouselTileComponent,
-    FupuCarouselDefDirective,
-    FupuCarouselNextDirective,
-    FupuCarouselPrevDirective,
-    FupuCarouselPointDirective,
+    NgxFyCarousel,
+    NgxFyCarouselTileComponent,
+    NgxFyCarouselDefDirective,
+    NgxFyCarouselNextDirective,
+    NgxFyCarouselPrevDirective,
+    NgxFyCarouselPointDirective,
   ],
   template: `
-    <fupu-carousel
+    <ngx-fy-carousel
       #carousel
       [inputs]="config"
       [dataSource]="items()"
       (carouselLoad)="loads.push($event)"
       (onMove)="moves.push($event.currentSlide)"
     >
-      <fupu-carousel-tile *fupuCarouselDef="let item; let i = index">
+      <ngx-fy-carousel-tile *ngxFyCarouselDef="let item; let i = index">
         <div class="tile-content">{{ item }}-{{ i }}</div>
-      </fupu-carousel-tile>
-      <button fupuCarouselPrev type="button">prev</button>
-      <button fupuCarouselNext type="button">next</button>
-      <ul fupuCarouselPoint>
+      </ngx-fy-carousel-tile>
+      <button ngxFyCarouselPrev type="button">prev</button>
+      <button ngxFyCarouselNext type="button">next</button>
+      <ul ngxFyCarouselPoint>
         @for (p of carousel.pointNumbers(); track p) {
           <li [class.active]="p === carousel.activePoint()" (click)="carousel.moveTo(p)">{{ p }}</li>
         }
       </ul>
-    </fupu-carousel>
+    </ngx-fy-carousel>
   `,
 })
 class HostComponent {
   items = signal([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
   loads: number[] = [];
   moves: number[] = [];
-  config: FupuCarouselConfig = {
+  config: NgxFyCarouselConfig = {
     grid: { xs: 2, sm: 2, md: 3, lg: 3, xl: 3, all: 0 },
     slide: 1,
     speed: 0,
@@ -59,10 +59,10 @@ class HostComponent {
   };
 }
 
-describe('FupuCarousel', () => {
+describe('NgxFyCarousel', () => {
   let fixture: ComponentFixture<HostComponent>;
   let host: HostComponent;
-  let carousel: FupuCarousel<number>;
+  let carousel: NgxFyCarousel<number>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -74,7 +74,7 @@ describe('FupuCarousel', () => {
     host = fixture.componentInstance;
     fixture.detectChanges();
     await fixture.whenStable();
-    carousel = fixture.debugElement.query(By.directive(FupuCarousel)).componentInstance;
+    carousel = fixture.debugElement.query(By.directive(NgxFyCarousel)).componentInstance;
   });
 
   it('renders items from dataSource', () => {

@@ -1,5 +1,5 @@
 /*
- * Public API Surface of fupu-carousel
+ * Public API Surface of ngx-fy-carousel
  */
 
 export type {
@@ -10,15 +10,15 @@ export type {
   CarouselLayoutType,
   Custom,
   DeviceType,
-  FupuCarouselOutletContext,
+  NgxFyCarouselOutletContext,
   Point,
   TransformInterface,
 } from './lib/models/types';
 
 export {
   Breakpoints,
-  FupuButton,
-  FupuCarouselConfig,
+  NgxFyButton,
+  NgxFyCarouselConfig,
   ItemsControl,
   TouchState,
   Transform,
@@ -27,7 +27,7 @@ export {
   createOutletContext,
 } from './lib/models/types';
 
-export { FupuCarouselStore } from './lib/models/store';
+export { NgxFyCarouselStore } from './lib/models/store';
 
 export type { NormalizedCarouselConfig } from './lib/models/normalize';
 export {
@@ -36,15 +36,15 @@ export {
   resolveItemsPerView,
 } from './lib/models/normalize';
 
-export { FupuCarousel } from './lib/carousel/carousel.component';
-export { FupuCarouselItemComponent } from './lib/components/item.component';
-export { FupuCarouselTileComponent } from './lib/components/tile.component';
+export { NgxFyCarousel } from './lib/carousel/carousel.component';
+export { NgxFyCarouselItemComponent } from './lib/components/item.component';
+export { NgxFyCarouselTileComponent } from './lib/components/tile.component';
 
 export {
-  FupuCarouselDefDirective,
-  FupuCarouselItemDirective,
-  FupuCarouselNextDirective,
-  FupuCarouselOutlet,
-  FupuCarouselPointDirective,
-  FupuCarouselPrevDirective,
+  NgxFyCarouselDefDirective,
+  NgxFyCarouselItemDirective,
+  NgxFyCarouselNextDirective,
+  NgxFyCarouselOutlet,
+  NgxFyCarouselPointDirective,
+  NgxFyCarouselPrevDirective,
 } from './lib/directives/carousel.directives';

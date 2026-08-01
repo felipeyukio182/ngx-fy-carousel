@@ -1,0 +1,13 @@
+<div #ngxfycarousel class="ngxfycarousel" [class.ngxfyvertical]="vertical.enabled">
+  <ng-content select="[ngxFyCarouselPrev]"></ng-content>
+  <div class="ngx-fy-container">
+    <div #touchContainer class="ngx-fy-touch-container">
+      <div #ngxFyItemsContainer class="ngxfycarousel-items">
+        <ng-container ngxFyCarouselOutlet></ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="ngxfyclearFix"></div>
+  <ng-content select="[ngxFyCarouselNext]"></ng-content>
+</div>
+<ng-content select="[ngxFyCarouselPoint]"></ng-content>

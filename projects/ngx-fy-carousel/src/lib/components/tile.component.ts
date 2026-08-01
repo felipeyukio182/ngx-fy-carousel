@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'fupu-carousel-tile',
+  selector: 'ngx-fy-carousel-tile',
   standalone: true,
   template: `
     <div class="tile">
@@ -24,4 +24,4 @@ import { Component } from '@angular/core';
     class: 'item',
   },
 })
-export class FupuCarouselTileComponent {}
+export class NgxFyCarouselTileComponent {}

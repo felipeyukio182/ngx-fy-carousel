@@ -1,38 +1,38 @@
 import { Component, signal } from '@angular/core';
 import {
-  FupuCarousel,
-  FupuCarouselConfig,
-  FupuCarouselDefDirective,
-  FupuCarouselNextDirective,
-  FupuCarouselPrevDirective,
-  FupuCarouselTileComponent,
-} from 'fupu-carousel';
+  NgxFyCarousel,
+  NgxFyCarouselConfig,
+  NgxFyCarouselDefDirective,
+  NgxFyCarouselNextDirective,
+  NgxFyCarouselPrevDirective,
+  NgxFyCarouselTileComponent,
+} from 'ngx-fy-carousel';
 
 @Component({
   selector: 'app-nested-page',
   imports: [
-    FupuCarousel,
-    FupuCarouselTileComponent,
-    FupuCarouselDefDirective,
-    FupuCarouselNextDirective,
-    FupuCarouselPrevDirective,
+    NgxFyCarousel,
+    NgxFyCarouselTileComponent,
+    NgxFyCarouselDefDirective,
+    NgxFyCarouselNextDirective,
+    NgxFyCarouselPrevDirective,
   ],
   template: `
     <h1>Nested carousels</h1>
-    <fupu-carousel [inputs]="outerConfig" [dataSource]="groups()">
-      <fupu-carousel-tile *fupuCarouselDef="let group">
+    <ngx-fy-carousel [inputs]="outerConfig" [dataSource]="groups()">
+      <ngx-fy-carousel-tile *ngxFyCarouselDef="let group">
         <h3>{{ group.title }}</h3>
-        <fupu-carousel [inputs]="innerConfig" [dataSource]="group.items">
-          <fupu-carousel-tile *fupuCarouselDef="let item">
+        <ngx-fy-carousel [inputs]="innerConfig" [dataSource]="group.items">
+          <ngx-fy-carousel-tile *ngxFyCarouselDef="let item">
             <div class="mini">{{ item }}</div>
-          </fupu-carousel-tile>
-          <button type="button" class="nav left" fupuCarouselPrev>‹</button>
-          <button type="button" class="nav right" fupuCarouselNext>›</button>
-        </fupu-carousel>
-      </fupu-carousel-tile>
-      <button type="button" class="nav left outer" fupuCarouselPrev>‹</button>
-      <button type="button" class="nav right outer" fupuCarouselNext>›</button>
-    </fupu-carousel>
+          </ngx-fy-carousel-tile>
+          <button type="button" class="nav left" ngxFyCarouselPrev>‹</button>
+          <button type="button" class="nav right" ngxFyCarouselNext>›</button>
+        </ngx-fy-carousel>
+      </ngx-fy-carousel-tile>
+      <button type="button" class="nav left outer" ngxFyCarouselPrev>‹</button>
+      <button type="button" class="nav right outer" ngxFyCarouselNext>›</button>
+    </ngx-fy-carousel>
   `,
   styles: `
     h3 { margin: 0 0 0.5rem; }
@@ -68,14 +68,14 @@ export class NestedPage {
     { title: 'Group C', items: ['C1', 'C2', 'C3', 'C4'] },
   ]);
 
-  outerConfig: FupuCarouselConfig = {
+  outerConfig: NgxFyCarouselConfig = {
     grid: { xs: 1, sm: 1, md: 1, lg: 1, xl: 1, all: 0 },
     slide: 1,
     speed: 400,
     touch: true,
   };
 
-  innerConfig: FupuCarouselConfig = {
+  innerConfig: NgxFyCarouselConfig = {
     grid: { xs: 2, sm: 2, md: 3, lg: 3, xl: 3, all: 0 },
     slide: 1,
     speed: 300,

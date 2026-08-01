@@ -56,7 +56,7 @@ export class Vertical {
   height = 0;
 }
 
-export class FupuButton {
+export class NgxFyButton {
   visibility?: ButtonVisible;
   elastic?: number;
 }
@@ -77,7 +77,7 @@ export interface CarouselInterval {
   initialDelay?: number;
 }
 
-export class FupuCarouselConfig {
+export class NgxFyCarouselConfig {
   grid!: TransformInterface;
   gridBreakpoints?: BreakpointsInterface;
   slide?: number;
@@ -92,12 +92,12 @@ export class FupuCarouselConfig {
   touch?: boolean;
   easing?: string;
   RTL?: boolean;
-  button?: FupuButton;
+  button?: NgxFyButton;
   vertical?: Vertical;
   velocity?: number;
 }
 
-export interface FupuCarouselOutletContext<T> {
+export interface NgxFyCarouselOutletContext<T> {
   $implicit: T;
   index: number;
   count: number;
@@ -108,7 +108,7 @@ export interface FupuCarouselOutletContext<T> {
   animate?: { value: boolean; params: { distance: number } };
 }
 
-export function createOutletContext<T>(data: T, index = 0): FupuCarouselOutletContext<T> {
+export function createOutletContext<T>(data: T, index = 0): NgxFyCarouselOutletContext<T> {
   return {
     $implicit: data,
     index,

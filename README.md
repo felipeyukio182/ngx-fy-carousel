@@ -1,10 +1,10 @@
-# fupu-carousel
+# ngx-fy-carousel
 
 Angular 20+ SSR carousel library with ngu-carousel compatible behavior.
 
 ## Workspace
 
-- Library: `projects/fupu-carousel`
+- Library: `projects/ngx-fy-carousel`
 - Demo SSR app: `projects/demo`
 
 ## Branches
@@ -27,7 +27,7 @@ npm run serve:ssr:demo    # run SSR server after build
 
 ## Docs
 
-- [Library README](projects/fupu-carousel/README.md)
+- [Library README](projects/ngx-fy-carousel/README.md)
 - [Compatibility guide](docs/ngu-carousel-compatibility.md)
 - [Third-party notices](THIRD_PARTY_NOTICES.md)
 

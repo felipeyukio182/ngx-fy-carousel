@@ -7,20 +7,20 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "fupu-carousel": {
+    "ngx-fy-carousel": {
       "projectType": "library",
-      "root": "projects/fupu-carousel",
-      "sourceRoot": "projects/fupu-carousel/src",
-      "prefix": "fupu",
+      "root": "projects/ngx-fy-carousel",
+      "sourceRoot": "projects/ngx-fy-carousel/src",
+      "prefix": "ngx-fy",
       "architect": {
         "build": {
           "builder": "@angular/build:ng-packagr",
           "configurations": {
             "production": {
-              "tsConfig": "projects/fupu-carousel/tsconfig.lib.prod.json"
+              "tsConfig": "projects/ngx-fy-carousel/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/fupu-carousel/tsconfig.lib.json"
+              "tsConfig": "projects/ngx-fy-carousel/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -28,8 +28,8 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "tsConfig": "projects/fupu-carousel/tsconfig.spec.json",
-            "buildTarget": "fupu-carousel:build:development",
+            "tsConfig": "projects/ngx-fy-carousel/tsconfig.spec.json",
+            "buildTarget": "ngx-fy-carousel:build:development",
             "runner": "vitest"
           }
         }

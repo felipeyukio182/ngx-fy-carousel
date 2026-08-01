@@ -1,34 +1,34 @@
 import { Directive, Input, TemplateRef, ViewContainerRef, inject } from '@angular/core';
 
 @Directive({
-  selector: '[fupuCarouselItem]',
+  selector: '[ngxFyCarouselItem]',
   standalone: true,
 })
-export class FupuCarouselItemDirective {}
+export class NgxFyCarouselItemDirective {}
 
 @Directive({
-  selector: '[fupuCarouselNext]',
+  selector: '[ngxFyCarouselNext]',
   standalone: true,
 })
-export class FupuCarouselNextDirective {}
+export class NgxFyCarouselNextDirective {}
 
 @Directive({
-  selector: '[fupuCarouselPrev]',
+  selector: '[ngxFyCarouselPrev]',
   standalone: true,
 })
-export class FupuCarouselPrevDirective {}
+export class NgxFyCarouselPrevDirective {}
 
 @Directive({
-  selector: '[fupuCarouselPoint]',
+  selector: '[ngxFyCarouselPoint]',
   standalone: true,
 })
-export class FupuCarouselPointDirective {}
+export class NgxFyCarouselPointDirective {}
 
 @Directive({
-  selector: '[fupuCarouselDef]',
+  selector: '[ngxFyCarouselDef]',
   standalone: true,
 })
-export class FupuCarouselDefDirective<T = unknown> {
+export class NgxFyCarouselDefDirective<T = unknown> {
   readonly template = inject(TemplateRef<unknown>);
 
   @Input()
@@ -36,9 +36,9 @@ export class FupuCarouselDefDirective<T = unknown> {
 }
 
 @Directive({
-  selector: '[fupuCarouselOutlet]',
+  selector: '[ngxFyCarouselOutlet]',
   standalone: true,
 })
-export class FupuCarouselOutlet {
+export class NgxFyCarouselOutlet {
   readonly viewContainer = inject(ViewContainerRef);
 }
