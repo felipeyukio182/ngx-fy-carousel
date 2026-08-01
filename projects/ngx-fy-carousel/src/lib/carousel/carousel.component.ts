@@ -159,7 +159,19 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
       const trackBy = this.trackByFn();
       const data = this.dataSource();
       const defs = this.defDirectives();
-      untracked(() => this.syncData(data, trackBy, defs.length));
+      untracked(() => {
+        // On the browser, wait for afterNextRender/bootstrap so hydration can
+        // claim SSR views before we run IterableDiffer (which starts from []).
+        if (this.isBrowser && !this.initialized) {
+          return;
+        }
+        this.syncData(data, trackBy, defs.length);
+        // SSR/prerender never runs afterNextRender — compute points/offset here
+        // so the serialized HTML matches what the client hydrates.
+        if (!this.isBrowser) {
+          this.recalculateLayout(true);
+        }
+      });
     });
 
     this.destroyRef.onDestroy(() => {
@@ -227,12 +239,10 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
       this.applyNormalizedConfig(config);
     }
 
-    // Sync only if the outlet was unavailable during the first effect pass.
-    const outlet = this.nodeOutlet();
-    if (outlet && outlet.viewContainer.length === 0) {
-      this.dataDiffer = null;
-      this.syncData(this.dataSource(), this.trackByFn(), this.defDirectives().length);
-    }
+    // First browser sync after hydration. If SSR already filled the outlet,
+    // syncData adopts those views instead of inserting duplicates.
+    this.dataDiffer = null;
+    this.syncData(this.dataSource(), this.trackByFn(), this.defDirectives().length);
     this.recalculateLayout(true);
 
     if (this.isBrowser) {
@@ -279,10 +289,22 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
   }
 
   private ensureToken(): string {
-    if (!this.token) {
-      this.token = this.generateId();
-      this.renderer.addClass(this.host.nativeElement, this.token);
+    if (this.token) {
+      return this.token;
     }
+
+    // Reuse the SSR token already on the host so hydration does not see a
+    // mismatched class / style selector and rebuild the subtree.
+    const existing = Array.from(this.host.nativeElement.classList).find(name =>
+      /^ngxfycarousel[A-Za-z0-9]{6}$/.test(name),
+    );
+    if (existing) {
+      this.token = existing;
+      return this.token;
+    }
+
+    this.token = this.generateId();
+    this.renderer.addClass(this.host.nativeElement, this.token);
     return this.token;
   }
 
@@ -305,34 +327,37 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
       xl: Math.max(1, config.grid.xl),
     };
     if (config.vertical.enabled) {
-      const xs = `${this.styleSelector} > .item { height: ${config.vertical.height / cols.xs}px; }`;
-      const sm = `${this.styleSelector} > .item { height: ${config.vertical.height / cols.sm}px; }`;
-      const md = `${this.styleSelector} > .item { height: ${config.vertical.height / cols.md}px; }`;
-      const lg = `${this.styleSelector} > .item { height: ${config.vertical.height / cols.lg}px; }`;
-      const xl = `${this.styleSelector} > .item { height: ${config.vertical.height / cols.xl}px; }`;
-      css += `
-        @media (max-width: ${bp.sm - 1}px) { ${xs} }
-        @media (min-width: ${bp.sm}px) { ${sm} }
-        @media (min-width: ${bp.md}px) { ${md} }
-        @media (min-width: ${bp.lg}px) { ${lg} }
-        @media (min-width: ${bp.xl}px) { ${xl} }
-      `;
+      const xs = `${this.styleSelector}>.item{height:${config.vertical.height / cols.xs}px}`;
+      const sm = `${this.styleSelector}>.item{height:${config.vertical.height / cols.sm}px}`;
+      const md = `${this.styleSelector}>.item{height:${config.vertical.height / cols.md}px}`;
+      const lg = `${this.styleSelector}>.item{height:${config.vertical.height / cols.lg}px}`;
+      const xl = `${this.styleSelector}>.item{height:${config.vertical.height / cols.xl}px}`;
+      css +=
+        `@media (max-width:${bp.sm - 1}px){${xs}}` +
+        `@media (min-width:${bp.sm}px){${sm}}` +
+        `@media (min-width:${bp.md}px){${md}}` +
+        `@media (min-width:${bp.lg}px){${lg}}` +
+        `@media (min-width:${bp.xl}px){${xl}}`;
     } else if (config.layoutType === 'responsive') {
       const xsFactor = config.type === 'mobile' ? 95 : 100;
-      const xs = `${this.styleSelector} > .item { flex: 0 0 ${xsFactor / cols.xs}%; width: ${xsFactor / cols.xs}%; }`;
-      const sm = `${this.styleSelector} > .item { flex: 0 0 ${100 / cols.sm}%; width: ${100 / cols.sm}%; }`;
-      const md = `${this.styleSelector} > .item { flex: 0 0 ${100 / cols.md}%; width: ${100 / cols.md}%; }`;
-      const lg = `${this.styleSelector} > .item { flex: 0 0 ${100 / cols.lg}%; width: ${100 / cols.lg}%; }`;
-      const xl = `${this.styleSelector} > .item { flex: 0 0 ${100 / cols.xl}%; width: ${100 / cols.xl}%; }`;
-      css += `
-        @media (max-width: ${bp.sm - 1}px) { ${xs} }
-        @media (min-width: ${bp.sm}px) { ${sm} }
-        @media (min-width: ${bp.md}px) { ${md} }
-        @media (min-width: ${bp.lg}px) { ${lg} }
-        @media (min-width: ${bp.xl}px) { ${xl} }
-      `;
+      const pct = (items: number, factor = 100) => {
+        const value = factor / items;
+        // Stable serialization across SSR/client (avoid 33.333333333333336 drift).
+        return `${Number(value.toFixed(4))}%`;
+      };
+      const xs = `${this.styleSelector}>.item{flex:0 0 ${pct(cols.xs, xsFactor)};width:${pct(cols.xs, xsFactor)}}`;
+      const sm = `${this.styleSelector}>.item{flex:0 0 ${pct(cols.sm)};width:${pct(cols.sm)}}`;
+      const md = `${this.styleSelector}>.item{flex:0 0 ${pct(cols.md)};width:${pct(cols.md)}}`;
+      const lg = `${this.styleSelector}>.item{flex:0 0 ${pct(cols.lg)};width:${pct(cols.lg)}}`;
+      const xl = `${this.styleSelector}>.item{flex:0 0 ${pct(cols.xl)};width:${pct(cols.xl)}}`;
+      css +=
+        `@media (max-width:${bp.sm - 1}px){${xs}}` +
+        `@media (min-width:${bp.sm}px){${sm}}` +
+        `@media (min-width:${bp.md}px){${md}}` +
+        `@media (min-width:${bp.lg}px){${lg}}` +
+        `@media (min-width:${bp.xl}px){${xl}}`;
     } else {
-      css += `${this.styleSelector} > .item { flex: 0 0 ${config.grid.all}px; width: ${config.grid.all}px; }`;
+      css += `${this.styleSelector}>.item{flex:0 0 ${config.grid.all}px;width:${config.grid.all}px}`;
     }
 
     this.writeStyleElement(css);
@@ -340,10 +365,17 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
 
   private writeStyleElement(css: string): void {
     if (!this.styleElement) {
-      this.styleElement = this.renderer.createElement('style') as HTMLStyleElement;
-      this.renderer.appendChild(this.host.nativeElement, this.styleElement);
+      const existing = this.host.nativeElement.querySelector(':scope > style');
+      this.styleElement =
+        (existing as HTMLStyleElement | null) ??
+        (this.renderer.createElement('style') as HTMLStyleElement);
+      if (!existing) {
+        this.renderer.appendChild(this.host.nativeElement, this.styleElement);
+      }
     }
-    this.renderer.setProperty(this.styleElement, 'textContent', css);
+    if (this.styleElement.textContent !== css) {
+      this.renderer.setProperty(this.styleElement, 'textContent', css);
+    }
   }
 
   private setupObservers(): void {
@@ -476,18 +508,37 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
       return;
     }
 
+    const list = Array.from(data as Iterable<T>);
+    const viewContainer = outlet.viewContainer;
+
     if (!this.dataDiffer || this.lastTrackBy !== trackBy) {
       this.dataDiffer = this.differs.find([]).create(trackBy);
       this.lastTrackBy = trackBy;
+
+      // SSR/hydration already populated the outlet — prime the differ and keep
+      // the existing DOM instead of treating every item as a fresh insert.
+      if (viewContainer.length > 0 && viewContainer.length === list.length) {
+        this.dataDiffer.diff(data);
+        for (let i = 0; i < list.length; i++) {
+          const view = viewContainer.get(i) as EmbeddedViewRef<
+            NgxFyCarouselOutletContext<T>
+          > | null;
+          if (view) {
+            view.context.$implicit = list[i];
+          }
+        }
+        this.updateItemIndexContext();
+        if (this.initialized) {
+          this.recalculateLayout(true);
+        }
+        return;
+      }
     }
 
     const changes = this.dataDiffer.diff(data);
     if (!changes) {
       return;
     }
-
-    const list = Array.from(data as Iterable<T>);
-    const viewContainer = outlet.viewContainer;
 
     changes.forEachOperation(
       (
