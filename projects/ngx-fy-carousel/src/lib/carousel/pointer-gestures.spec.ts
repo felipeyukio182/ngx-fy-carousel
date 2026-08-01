@@ -45,4 +45,46 @@ describe('attachPointerGestures', () => {
     detach();
     el.remove();
   });
+
+  it('ignores pointerdown from nested ngx-fy-carousel hosts', () => {
+    const outer = document.createElement('ngx-fy-carousel');
+    const touch = document.createElement('div');
+    const nested = document.createElement('ngx-fy-carousel');
+    const nestedBtn = document.createElement('button');
+    nested.appendChild(nestedBtn);
+    touch.appendChild(nested);
+    outer.appendChild(touch);
+    document.body.appendChild(outer);
+
+    Object.defineProperty(touch, 'setPointerCapture', { value: () => undefined });
+    Object.defineProperty(touch, 'releasePointerCapture', { value: () => undefined });
+    Object.defineProperty(touch, 'hasPointerCapture', { value: () => false });
+
+    let started = 0;
+    const detach = attachPointerGestures(
+      touch,
+      {
+        onPanStart: () => {
+          started += 1;
+        },
+        onPanMove: () => undefined,
+        onPanEnd: () => undefined,
+      },
+      { horizontal: true },
+    );
+
+    nestedBtn.dispatchEvent(
+      new FakePointerEvent('pointerdown', { pointerId: 1, clientX: 0, clientY: 0, button: 0 }),
+    );
+    nestedBtn.dispatchEvent(
+      new FakePointerEvent('pointermove', { pointerId: 1, clientX: 30, clientY: 0 }),
+    );
+    nestedBtn.dispatchEvent(
+      new FakePointerEvent('pointerup', { pointerId: 1, clientX: 30, clientY: 0 }),
+    );
+
+    expect(started).toBe(0);
+    detach();
+    outer.remove();
+  });
 });

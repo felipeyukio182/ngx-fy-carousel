@@ -13,7 +13,6 @@ import {
   TrackByFunction,
   afterNextRender,
   computed,
-  contentChild,
   contentChildren,
   effect,
   inject,
@@ -23,15 +22,12 @@ import {
   untracked,
   viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EMPTY, Subject, fromEvent, interval, merge, timer } from 'rxjs';
 import { map, startWith, switchMap } from 'rxjs/operators';
 
 import {
   NgxFyCarouselDefDirective,
-  NgxFyCarouselNextDirective,
   NgxFyCarouselOutlet,
-  NgxFyCarouselPrevDirective,
 } from '../directives/carousel.directives';
 import {
   NormalizedCarouselConfig,
@@ -53,7 +49,7 @@ import {
   NgxFyCarouselOutletContext,
   createOutletContext,
 } from '../models/types';
-import { IS_BROWSER } from '../tokens';
+import { IS_BROWSER, NGX_FY_CAROUSEL_NAV } from '../tokens';
 import { observeIntersection, observeResize, observeVisibility } from './observers';
 import { attachPointerGestures } from './pointer-gestures';
 
@@ -69,6 +65,7 @@ const NG_DEV_MODE = typeof ngDevMode === 'undefined' || ngDevMode;
   styleUrl: './carousel.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgxFyCarouselOutlet],
+  providers: [{ provide: NGX_FY_CAROUSEL_NAV, useExisting: NgxFyCarousel }],
   host: {
     '[class.banner]': 'normalized()?.custom === "banner"',
     '[class.ngxfyrtl]': 'RTL && !vertical.enabled',
@@ -92,8 +89,6 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
 
   private readonly defDirectives = contentChildren(NgxFyCarouselDefDirective);
   private readonly nodeOutlet = viewChild(NgxFyCarouselOutlet);
-  readonly nextButton = contentChild(NgxFyCarouselNextDirective, { read: ElementRef });
-  readonly prevButton = contentChild(NgxFyCarouselPrevDirective, { read: ElementRef });
   readonly carouselMain = viewChild.required('ngxfycarousel', { read: ElementRef });
   readonly itemsContainer = viewChild.required('ngxFyItemsContainer', { read: ElementRef });
   readonly touchContainer = viewChild.required('touchContainer', { read: ElementRef });
@@ -163,28 +158,6 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
       const data = this.dataSource();
       const defs = this.defDirectives();
       untracked(() => this.syncData(data, trackBy, defs.length));
-    });
-
-    effect(cleanup => {
-      const prev = this.prevButton();
-      if (!prev) {
-        return;
-      }
-      const sub = fromEvent(prev.nativeElement, 'click')
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => this.scrollOne(0));
-      cleanup(() => sub.unsubscribe());
-    });
-
-    effect(cleanup => {
-      const next = this.nextButton();
-      if (!next) {
-        return;
-      }
-      const sub = fromEvent(next.nativeElement, 'click')
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => this.scrollOne(1));
-      cleanup(() => sub.unsubscribe());
     });
 
     this.destroyRef.onDestroy(() => {
@@ -577,7 +550,8 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
     }
   }
 
-  private scrollOne(btn: number): void {
+  /** Navigate one step. `0` = previous, `1` = next. */
+  scrollOne(btn: number): void {
     let itemSpeed = this.speed;
     let currentSlide = 0;
     let touchMove = Math.ceil(this.dexVal / Math.max(1, this.itemWidth));

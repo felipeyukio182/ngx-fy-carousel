@@ -118,3 +118,83 @@ describe('NgxFyCarousel', () => {
     expect(tiles[0].textContent).toContain('100-0');
   });
 });
+
+@Component({
+  standalone: true,
+  imports: [
+    NgxFyCarousel,
+    NgxFyCarouselTileComponent,
+    NgxFyCarouselDefDirective,
+    NgxFyCarouselNextDirective,
+  ],
+  template: `
+    <ngx-fy-carousel [inputs]="outerConfig" [dataSource]="groups">
+      <ngx-fy-carousel-tile *ngxFyCarouselDef="let group">
+        <ngx-fy-carousel [inputs]="innerConfig" [dataSource]="group.items">
+          <ngx-fy-carousel-tile *ngxFyCarouselDef="let item">
+            <div class="mini">{{ item }}</div>
+          </ngx-fy-carousel-tile>
+          <button type="button" class="inner-next" ngxFyCarouselNext>inner-next</button>
+        </ngx-fy-carousel>
+      </ngx-fy-carousel-tile>
+      <button type="button" class="outer-next" ngxFyCarouselNext>outer-next</button>
+    </ngx-fy-carousel>
+  `,
+})
+class NestedHostComponent {
+  groups = [
+    { title: 'A', items: ['A1', 'A2', 'A3', 'A4'] },
+    { title: 'B', items: ['B1', 'B2', 'B3', 'B4'] },
+    { title: 'C', items: ['C1', 'C2', 'C3', 'C4'] },
+  ];
+  outerConfig: NgxFyCarouselConfig = {
+    grid: { xs: 1, sm: 1, md: 1, lg: 1, xl: 1, all: 0 },
+    slide: 1,
+    speed: 0,
+    touch: false,
+  };
+  innerConfig: NgxFyCarouselConfig = {
+    grid: { xs: 2, sm: 2, md: 2, lg: 2, xl: 2, all: 0 },
+    slide: 1,
+    speed: 0,
+    touch: false,
+  };
+}
+
+describe('NgxFyCarousel nested controls', () => {
+  let fixture: ComponentFixture<NestedHostComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [NestedHostComponent],
+      providers: [provideZonelessChangeDetection()],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(NestedHostComponent);
+    fixture.detectChanges();
+    await fixture.whenStable();
+  });
+
+  it('outer and inner next buttons control their own carousel', async () => {
+    const carousels = fixture.debugElement.queryAll(By.directive(NgxFyCarousel));
+    const outer = carousels[0].componentInstance as NgxFyCarousel<unknown>;
+    const inner = carousels[1].componentInstance as NgxFyCarousel<unknown>;
+
+    expect(outer.currentSlide).toBe(0);
+    expect(inner.currentSlide).toBe(0);
+
+    fixture.nativeElement.querySelector('button.outer-next').click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(outer.currentSlide).toBeGreaterThan(0);
+    expect(inner.currentSlide).toBe(0);
+
+    const innerSlideBefore = inner.currentSlide;
+    const outerSlideBefore = outer.currentSlide;
+    fixture.nativeElement.querySelector('button.inner-next').click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(inner.currentSlide).toBeGreaterThan(innerSlideBefore);
+    expect(outer.currentSlide).toBe(outerSlideBefore);
+  });
+});

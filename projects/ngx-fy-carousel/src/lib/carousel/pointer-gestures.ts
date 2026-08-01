@@ -26,6 +26,22 @@ export function attachPointerGestures(
     if (pointerId !== null || event.button !== 0) {
       return;
     }
+
+    // Nested carousels live inside this touch surface. Ignore pointers that
+    // originate in a deeper ngx-fy-carousel so we don't steal their clicks via
+    // setPointerCapture during the bubble phase.
+    const targetEl =
+      event.target instanceof Element
+        ? event.target
+        : ((event.target as Node | null)?.parentElement ?? null);
+    if (targetEl) {
+      const nestedHost = targetEl.closest('ngx-fy-carousel');
+      const ownHost = element.closest('ngx-fy-carousel');
+      if (nestedHost && ownHost && nestedHost !== ownHost) {
+        return;
+      }
+    }
+
     pointerId = event.pointerId;
     startX = lastX = event.clientX;
     startY = lastY = event.clientY;
