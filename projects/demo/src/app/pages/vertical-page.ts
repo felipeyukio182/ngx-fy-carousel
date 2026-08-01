@@ -18,39 +18,65 @@ import {
     NgxFyCarouselPrevDirective,
   ],
   template: `
-    <h1>Vertical carousel</h1>
-    <ngx-fy-carousel [inputs]="config" [dataSource]="items()">
-      <ngx-fy-carousel-item *ngxFyCarouselDef="let item">
-        <div class="row">{{ item }}</div>
-      </ngx-fy-carousel-item>
-      <button type="button" class="nav top" ngxFyCarouselPrev>▲</button>
-      <button type="button" class="nav bottom" ngxFyCarouselNext>▼</button>
-    </ngx-fy-carousel>
+    <section class="demo-page">
+      <header class="demo-intro">
+        <p class="eyebrow">Axis flip</p>
+        <h1>Vertical carousel</h1>
+        <p>Scroll on the Y axis with loop and autoplay — controls sit above and below the stage.</p>
+      </header>
+
+      <div class="demo-stage vertical-stage">
+        <ngx-fy-carousel [inputs]="config" [dataSource]="items()">
+          <ngx-fy-carousel-item *ngxFyCarouselDef="let item; let i = index">
+            <div class="row" [attr.data-tone]="i % 3">
+              <span class="row-label">Panel</span>
+              <strong>{{ item }}</strong>
+            </div>
+          </ngx-fy-carousel-item>
+          <button type="button" class="demo-nav top" ngxFyCarouselPrev aria-label="Previous">▲</button>
+          <button type="button" class="demo-nav bottom" ngxFyCarouselNext aria-label="Next">▼</button>
+        </ngx-fy-carousel>
+      </div>
+    </section>
   `,
   styles: `
+    .vertical-stage {
+      max-width: 400px;
+      margin-inline: auto;
+    }
+
     .row {
       display: grid;
-      place-items: center;
+      place-content: center;
+      gap: 0.3rem;
       height: 100%;
-      background: #e0e7ff;
-      font-size: 1.75rem;
+      text-align: center;
+      border-bottom: 1px solid rgb(26 35 48 / 8%);
+    }
+
+    .row-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+
+    .row strong {
+      font-size: 1.7rem;
       font-weight: 700;
-      border-bottom: 1px solid #c7d2fe;
+      letter-spacing: -0.015em;
     }
-    .nav {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      border: 0;
-      border-radius: 999px;
-      width: 40px;
-      height: 40px;
-      background: #fff;
-      box-shadow: 0 2px 10px rgb(0 0 0 / 20%);
-      z-index: 2;
+
+    .row[data-tone='0'] {
+      background: #dceee8;
     }
-    .top { top: 8px; }
-    .bottom { bottom: 8px; }
+    .row[data-tone='1'] {
+      background: #dbe6f0;
+    }
+    .row[data-tone='2'] {
+      background: #efe4d6;
+    }
   `,
 })
 export class VerticalPage {

@@ -20,71 +20,107 @@ import {
     NgxFyCarouselPointDirective,
   ],
   template: `
-    <h1>Banner carousel</h1>
-    <p>Autoplay + loop banner mode.</p>
+    <section class="demo-page">
+      <header class="demo-intro">
+        <p class="eyebrow">Full-bleed slides</p>
+        <h1>Banner carousel</h1>
+        <p>Single-item banner mode with loop and autoplay — swipe or use the controls.</p>
+      </header>
 
-    <ngx-fy-carousel #carousel [inputs]="config" [dataSource]="items()">
-      <ngx-fy-carousel-item *ngxFyCarouselDef="let item">
-        <div class="banner" [style.background]="item.color">
-          <h2>{{ item.title }}</h2>
-        </div>
-      </ngx-fy-carousel-item>
-      <button type="button" class="nav left" ngxFyCarouselPrev>‹</button>
-      <button type="button" class="nav right" ngxFyCarouselNext>›</button>
-      <ul class="points" ngxFyCarouselPoint>
-        @for (p of carousel.pointNumbers(); track p) {
-          <li [class.active]="p === carousel.activePoint()" (click)="carousel.moveTo(p)"></li>
-        }
-      </ul>
-    </ngx-fy-carousel>
+      <div class="demo-stage stage-flush">
+        <ngx-fy-carousel #carousel [inputs]="config" [dataSource]="items()">
+          <ngx-fy-carousel-item *ngxFyCarouselDef="let item">
+            <div class="banner" [style.background]="item.color">
+              <div class="banner-copy">
+                <span>{{ item.kicker }}</span>
+                <h2>{{ item.title }}</h2>
+              </div>
+            </div>
+          </ngx-fy-carousel-item>
+          <button type="button" class="demo-nav left" ngxFyCarouselPrev aria-label="Previous">‹</button>
+          <button type="button" class="demo-nav right" ngxFyCarouselNext aria-label="Next">›</button>
+          <ul class="demo-points on-banner" ngxFyCarouselPoint>
+            @for (p of carousel.pointNumbers(); track p) {
+              <li
+                [class.active]="p === carousel.activePoint()"
+                (click)="carousel.moveTo(p)"
+                [attr.aria-label]="'Go to slide ' + (p + 1)"
+              ></li>
+            }
+          </ul>
+        </ngx-fy-carousel>
+      </div>
+    </section>
   `,
   styles: `
+    .stage-flush {
+      padding: 0;
+    }
+
     .banner {
-      min-height: 320px;
+      min-height: min(48vh, 380px);
       display: grid;
       place-items: center;
-      color: white;
-      font-size: 2rem;
+      color: #fff;
+      position: relative;
     }
-    .nav {
+
+    .banner::after {
+      content: '';
       position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 48px;
-      height: 48px;
-      border: 0;
-      border-radius: 999px;
-      background: #fff;
-      box-shadow: 0 2px 10px rgb(0 0 0 / 25%);
-      z-index: 2;
-      cursor: pointer;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 40%, rgb(0 0 0 / 30%));
+      pointer-events: none;
     }
-    .left { left: 8px; }
-    .right { right: 8px; }
-    .points {
-      list-style: none;
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px;
+
+    .banner-copy {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 1.5rem;
+    }
+
+    .banner-copy span {
+      display: inline-block;
+      margin-bottom: 0.4rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.85;
+    }
+
+    .banner-copy h2 {
       margin: 0;
+      font-size: clamp(1.75rem, 4vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
     }
-    .points li {
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      background: #cbd5e1;
-      cursor: pointer;
+
+    .on-banner {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0.9rem;
+      margin: 0;
+      z-index: 2;
     }
-    .points li.active { background: #0f172a; }
+
+    .on-banner li {
+      background: rgb(255 255 255 / 45%);
+    }
+
+    .on-banner li.active {
+      background: #fff;
+    }
   `,
 })
 export class BannerPage {
   items = signal([
-    { title: 'Slide 1', color: '#2563eb' },
-    { title: 'Slide 2', color: '#7c3aed' },
-    { title: 'Slide 3', color: '#db2777' },
-    { title: 'Slide 4', color: '#059669' },
+    { title: 'Coastal Motion', kicker: 'Slide 01', color: 'linear-gradient(135deg, #2f6f7a, #1f4e5f)' },
+    { title: 'Warm Horizon', kicker: 'Slide 02', color: 'linear-gradient(135deg, #b45309, #8a3d08)' },
+    { title: 'Ink Tide', kicker: 'Slide 03', color: 'linear-gradient(135deg, #2a3644, #1a2330)' },
+    { title: 'Soft Meadow', kicker: 'Slide 04', color: 'linear-gradient(135deg, #4f7a62, #355847)' },
   ]);
 
   config: NgxFyCarouselConfig = {

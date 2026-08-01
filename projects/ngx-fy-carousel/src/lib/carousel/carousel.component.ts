@@ -125,6 +125,8 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
   private detachVisibility: (() => void) | null = null;
   private autoplayStop: (() => void) | null = null;
   private initialized = false;
+  private styleElement: HTMLStyleElement | null = null;
+  private styleSelector = '';
 
   constructor() {
     super();
@@ -141,7 +143,7 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
           this.normalizedSignal.set(normalized);
           this.applyNormalizedConfig(normalized);
           if (this.initialized) {
-            this.recalculateLayout();
+            this.recalculateLayout(true);
             this.setupPointerGestures();
             this.setupAutoplay();
           }
@@ -167,6 +169,8 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
       this.detachVisibility?.();
       this.autoplayStop?.();
       this.intervalController$.complete();
+      this.styleElement?.remove();
+      this.styleElement = null;
     });
   }
 
@@ -217,8 +221,6 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
       return;
     }
     this.initialized = true;
-    this.token = this.generateId();
-    this.renderer.addClass(this.host.nativeElement, this.token);
 
     const config = this.normalizedSignal();
     if (config) {
@@ -231,7 +233,7 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
       this.dataDiffer = null;
       this.syncData(this.dataSource(), this.trackByFn(), this.defDirectives().length);
     }
-    this.recalculateLayout();
+    this.recalculateLayout(true);
 
     if (this.isBrowser) {
       this.setupObservers();
@@ -270,6 +272,78 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
         );
       }
     }
+
+    // Match ngu-carousel: item widths come from injected @media rules so the
+    // browser can switch breakpoints without waiting for JS measure.
+    this.updateItemStyles(config);
+  }
+
+  private ensureToken(): string {
+    if (!this.token) {
+      this.token = this.generateId();
+      this.renderer.addClass(this.host.nativeElement, this.token);
+    }
+    return this.token;
+  }
+
+  private updateItemStyles(config: NormalizedCarouselConfig): void {
+    const token = this.ensureToken();
+    this.styleSelector =
+      `.${token} > .ngxfycarousel > .ngx-fy-container > .ngx-fy-touch-container > .ngxfycarousel-items`;
+
+    let css = '';
+    if (config.animation === 'lazy') {
+      css += `${this.styleSelector} > .item { transition: transform .6s ease; }`;
+    }
+
+    const bp = config.gridBreakpoints;
+    const cols = {
+      xs: Math.max(1, config.grid.xs),
+      sm: Math.max(1, config.grid.sm),
+      md: Math.max(1, config.grid.md),
+      lg: Math.max(1, config.grid.lg),
+      xl: Math.max(1, config.grid.xl),
+    };
+    if (config.vertical.enabled) {
+      const xs = `${this.styleSelector} > .item { height: ${config.vertical.height / cols.xs}px; }`;
+      const sm = `${this.styleSelector} > .item { height: ${config.vertical.height / cols.sm}px; }`;
+      const md = `${this.styleSelector} > .item { height: ${config.vertical.height / cols.md}px; }`;
+      const lg = `${this.styleSelector} > .item { height: ${config.vertical.height / cols.lg}px; }`;
+      const xl = `${this.styleSelector} > .item { height: ${config.vertical.height / cols.xl}px; }`;
+      css += `
+        @media (max-width: ${bp.sm - 1}px) { ${xs} }
+        @media (min-width: ${bp.sm}px) { ${sm} }
+        @media (min-width: ${bp.md}px) { ${md} }
+        @media (min-width: ${bp.lg}px) { ${lg} }
+        @media (min-width: ${bp.xl}px) { ${xl} }
+      `;
+    } else if (config.layoutType === 'responsive') {
+      const xsFactor = config.type === 'mobile' ? 95 : 100;
+      const xs = `${this.styleSelector} > .item { flex: 0 0 ${xsFactor / cols.xs}%; width: ${xsFactor / cols.xs}%; }`;
+      const sm = `${this.styleSelector} > .item { flex: 0 0 ${100 / cols.sm}%; width: ${100 / cols.sm}%; }`;
+      const md = `${this.styleSelector} > .item { flex: 0 0 ${100 / cols.md}%; width: ${100 / cols.md}%; }`;
+      const lg = `${this.styleSelector} > .item { flex: 0 0 ${100 / cols.lg}%; width: ${100 / cols.lg}%; }`;
+      const xl = `${this.styleSelector} > .item { flex: 0 0 ${100 / cols.xl}%; width: ${100 / cols.xl}%; }`;
+      css += `
+        @media (max-width: ${bp.sm - 1}px) { ${xs} }
+        @media (min-width: ${bp.sm}px) { ${sm} }
+        @media (min-width: ${bp.md}px) { ${md} }
+        @media (min-width: ${bp.lg}px) { ${lg} }
+        @media (min-width: ${bp.xl}px) { ${xl} }
+      `;
+    } else {
+      css += `${this.styleSelector} > .item { flex: 0 0 ${config.grid.all}px; width: ${config.grid.all}px; }`;
+    }
+
+    this.writeStyleElement(css);
+  }
+
+  private writeStyleElement(css: string): void {
+    if (!this.styleElement) {
+      this.styleElement = this.renderer.createElement('style') as HTMLStyleElement;
+      this.renderer.appendChild(this.host.nativeElement, this.styleElement);
+    }
+    this.renderer.setProperty(this.styleElement, 'textContent', css);
   }
 
   private setupObservers(): void {
@@ -279,8 +353,7 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
 
     this.detachResize = observeResize(this.carouselMain().nativeElement, () => {
       this.ngZone.run(() => {
-        this.setTransition('');
-        this.recalculateLayout();
+        this.recalculateLayout(true);
       });
     });
 
@@ -316,7 +389,7 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
           this.carouselWidth = this.itemsContainer().nativeElement.offsetWidth;
           this.touchTransform = this.currentOffsetValue();
           this.dexVal = 0;
-          this.setTransition('');
+          this.setTransition('none');
         },
         onPanMove: (deltaX, deltaY) => {
           const delta = Math.abs(horizontal ? deltaX : deltaY);
@@ -487,10 +560,14 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
     return defs.find(def => !!def.when?.(index, data)) as NgxFyCarouselDefDirective<T> | undefined;
   }
 
-  private recalculateLayout(): void {
+  private recalculateLayout(snap = false): void {
     const config = this.normalizedSignal();
     if (!config) {
       return;
+    }
+
+    if (snap) {
+      this.setTransition('none');
     }
 
     const breakpoints = config.gridBreakpoints;
@@ -508,27 +585,9 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
     this.speed = config.speed;
     this.itemLength = this.itemCount();
 
-    this.applyItemBasis(config);
     this.currentSlide = clampSlideIndex(this.currentSlide, this.itemLength, this.items);
     this.refreshPoints();
     this.applyOffset(this.currentSlide, false);
-  }
-
-  private applyItemBasis(config: NormalizedCarouselConfig): void {
-    if (config.vertical.enabled) {
-      const basis = `${config.vertical.height / this.items}px`;
-      this.host.nativeElement.style.setProperty('--ngx-fy-item-basis', basis);
-      return;
-    }
-    if (config.layoutType === 'fixed') {
-      this.host.nativeElement.style.setProperty('--ngx-fy-item-basis', `${config.grid.all}px`);
-      return;
-    }
-    const mobileFactor = config.type === 'mobile' ? 95 : 100;
-    this.host.nativeElement.style.setProperty(
-      '--ngx-fy-item-basis',
-      `${mobileFactor / this.items}%`,
-    );
   }
 
   private refreshPoints(): void {
@@ -628,7 +687,7 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
         );
       }
     } else {
-      this.setTransition('');
+      this.setTransition('none');
     }
 
     this.itemLength = this.itemCount();
@@ -796,7 +855,11 @@ export class NgxFyCarousel<T, U extends NgIterable<T> = NgIterable<T>> extends N
   }
 
   private setTransition(value: string): void {
-    this.renderer.setStyle(this.itemsContainer().nativeElement, 'transition', value);
+    const el = this.itemsContainer()?.nativeElement;
+    if (!el) {
+      return;
+    }
+    this.renderer.setStyle(el, 'transition', value);
   }
 
   private itemCount(): number {
