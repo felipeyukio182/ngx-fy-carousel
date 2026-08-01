@@ -31,6 +31,7 @@ import {
     .row {
       display: grid;
       place-items: center;
+      height: 100%;
       background: #e0e7ff;
       font-size: 1.75rem;
       font-weight: 700;
