@@ -1,4 +1,15 @@
-import { Directive, Input, TemplateRef, ViewContainerRef, inject } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  Input,
+  TemplateRef,
+  ViewContainerRef,
+  inject,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { fromEvent } from 'rxjs';
+
+import { NGX_FY_CAROUSEL_NAV } from '../tokens';
 
 @Directive({
   selector: '[ngxFyCarouselItem]',
@@ -10,13 +21,31 @@ export class NgxFyCarouselItemDirective {}
   selector: '[ngxFyCarouselNext]',
   standalone: true,
 })
-export class NgxFyCarouselNextDirective {}
+export class NgxFyCarouselNextDirective {
+  private readonly nav = inject(NGX_FY_CAROUSEL_NAV);
+  private readonly el = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  constructor() {
+    fromEvent(this.el.nativeElement, 'click')
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.nav.scrollOne(1));
+  }
+}
 
 @Directive({
   selector: '[ngxFyCarouselPrev]',
   standalone: true,
 })
-export class NgxFyCarouselPrevDirective {}
+export class NgxFyCarouselPrevDirective {
+  private readonly nav = inject(NGX_FY_CAROUSEL_NAV);
+  private readonly el = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  constructor() {
+    fromEvent(this.el.nativeElement, 'click')
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.nav.scrollOne(0));
+  }
+}
 
 @Directive({
   selector: '[ngxFyCarouselPoint]',
