@@ -4,6 +4,11 @@
   "compileOnSave": false,
   "compilerOptions": {
     "strict": true,
+    "paths": {
+      "ngx-fy-carousel": [
+        "./projects/ngx-fy-carousel/src/public-api.ts"
+      ]
+    },
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
@@ -22,5 +27,19 @@
     "typeCheckHostBindings": true,
     "strictTemplates": true
   },
-  "files": []
+  "files": [],
+  "references": [
+    {
+      "path": "./projects/ngx-fy-carousel/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ngx-fy-carousel/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/demo/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/demo/tsconfig.spec.json"
+    }
+  ]
 }

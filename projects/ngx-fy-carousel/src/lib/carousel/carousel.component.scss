@@ -1,0 +1,104 @@
+:host {
+  display: block;
+  position: relative;
+  --ngx-fy-offset: 0px;
+  --ngx-fy-item-basis: 100%;
+  --ngx-fy-speed: 400ms;
+  --ngx-fy-easing: cubic-bezier(0, 0, 0.2, 1);
+  --ngx-fy-dir: -1;
+  --ngx-fy-vertical-height: auto;
+}
+
+:host.ngxfyrtl {
+  direction: rtl;
+  --ngx-fy-dir: 1;
+}
+
+:host.banner .ngxfycarouselPointDefault .ngxfycarouselPoint {
+  position: absolute;
+  width: 100%;
+  bottom: 20px;
+}
+
+:host.banner .ngxfycarouselPointDefault .ngxfycarouselPoint li {
+  background: #ffffff8c;
+}
+
+:host.banner .ngxfycarouselPointDefault .ngxfycarouselPoint li.active {
+  background: #fff;
+}
+
+.ngxfycarousel {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+.ngx-fy-container {
+  overflow: hidden;
+}
+
+.ngx-fy-touch-container {
+  touch-action: pan-y;
+}
+
+.ngxfycarousel-items {
+  position: relative;
+  display: flex;
+  height: 100%;
+  will-change: transform;
+  transform: translate3d(calc(var(--ngx-fy-dir) * var(--ngx-fy-offset)), 0, 0);
+}
+
+.ngxfyvertical .ngx-fy-touch-container {
+  touch-action: pan-x;
+}
+
+.ngxfyvertical .ngxfycarousel-items {
+  flex-direction: column;
+  height: var(--ngx-fy-vertical-height);
+  transform: translate3d(0, calc(-1 * var(--ngx-fy-offset)), 0);
+}
+
+/* Item flex/width/height are injected as breakpoint @media rules (ngu-carousel parity). */
+:host ::ng-deep .item {
+  box-sizing: border-box;
+}
+
+.ngxfyvertical ::ng-deep .item {
+  width: 100%;
+}
+
+.ngxfyclearFix {
+  clear: both;
+}
+
+.ngxfycarouselPointDefault .ngxfycarouselPoint {
+  list-style-type: none;
+  text-align: center;
+  padding: 12px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: auto;
+  box-sizing: border-box;
+}
+
+.ngxfycarouselPointDefault .ngxfycarouselPoint li {
+  display: inline-block;
+  border-radius: 50%;
+  background: #0000008c;
+  padding: 4px;
+  margin: 0 4px;
+  transition-timing-function: cubic-bezier(0.17, 0.67, 0.83, 0.67);
+  transition: 0.4s;
+}
+
+.ngxfycarouselPointDefault .ngxfycarouselPoint li.active {
+  background: #6b6b6b;
+  transform: scale(1.8);
+}
+
+.ngxfycarouselPointDefault .ngxfycarouselPoint li:hover {
+  cursor: pointer;
+}
+
