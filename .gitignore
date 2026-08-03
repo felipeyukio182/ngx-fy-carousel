@@ -43,3 +43,7 @@ Thumbs.db
 
 # Playwright MCP session artifacts
 .playwright-mcp/
+
+# Claude Code caveman plugin artifacts
+.agents/
+skills-lock.json
