@@ -30,6 +30,7 @@ npm run publish:lib       # publish built lib to npm (manual)
 ## Docs
 
 - [Library README](projects/ngx-fy-carousel/README.md)
+- [Project origin](docs/project-origin.md)
 - [Compatibility guide](docs/ngu-carousel-compatibility.md)
 - [Publish guide](docs/publish.md)
 - [Third-party notices](THIRD_PARTY_NOTICES.md)
